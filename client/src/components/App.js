@@ -1,15 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import "./App.css";
-import DrawMap from "./DrawMap";
+import Map from "./Map";
+import Draw from "./Draw";
 
-function App() {
+const App = props => {
+  const [style, setStyle] = useState("mapbox://styles/mapbox/dark-v9");
+  const { accessToken } = props;
+
   return (
     <div className="App">
       <header className="App-header">
-        <DrawMap></DrawMap>
+        <Map style={style} accessToken={accessToken}>
+          <Draw />
+        </Map>
       </header>
     </div>
   );
-}
+};
 
 export default App;
