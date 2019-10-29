@@ -1,11 +1,12 @@
-import React from 'react';
-import './App.css';
+import React from "react";
+import "./App.css";
+import DrawMap from "./DrawMap";
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        Record Map
+        <DrawMap></DrawMap>
       </header>
     </div>
   );
