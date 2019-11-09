@@ -1,4 +1,5 @@
 import localforage from "localforage";
+import { format } from "date-fns";
 
 window.localforage = localforage;
 
@@ -14,7 +15,15 @@ const set = async layer => {
   return layer;
 };
 
+const log = async () => {
+  console.log(
+    `Saved update to localforage at:`,
+    format(new Date(Date.now()), "yyyy-MM-dd'T'HH:mm:ss.SSSxxx")
+  );
+};
+
 export default {
   get,
-  set
+  set,
+  log
 };

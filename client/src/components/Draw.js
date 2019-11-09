@@ -1,11 +1,9 @@
 import React, { Component, createRef } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { getLayerFromApi, updateLayer } from "../actions";
+import { getLayerFromApi, postLayerToApi, updateLayer } from "../actions";
 import DrawControl from "react-mapbox-gl-draw";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
-import { format } from "date-fns";
-import Api from "../lib/api";
 
 class Draw extends Component {
   control = createRef();
@@ -37,14 +35,8 @@ class Draw extends Component {
   };
 
   save = async () => {
-    /* @TODO: simulate a post request using sagas */
-    const all = await Api.set(this.control.draw.getAll());
-    this.props.updateLayer(all);
-
-    console.log(
-      `Saved update to localStorage at:`,
-      format(new Date(Date.now()), "yyyy-MM-dd'T'HH:mm:ss.SSSxxx")
-    );
+    const layer = this.control.draw.getAll();
+    this.props.postLayerToApi(layer);
   };
 
   onDrawCreate = ({ features }) => {
@@ -98,7 +90,10 @@ class Draw extends Component {
 const mapStateToProps = ({ layer }) => ({ layer });
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators({ getLayerFromApi, updateLayer }, dispatch);
+  return bindActionCreators(
+    { getLayerFromApi, postLayerToApi, updateLayer },
+    dispatch
+  );
 };
 
 export default connect(
