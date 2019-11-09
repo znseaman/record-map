@@ -6,7 +6,6 @@ import saga from "../sagas";
 
 import reducers from "../reducers";
 import initialState from "./initialState";
-import { getLayerFromApi } from "../actions";
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -20,7 +19,5 @@ const store = createStore(
 
 /* The saga begins! */
 sagaMiddleware.run(saga);
-
-// store.dispatch(getLayerFromApi());
 
 export default store;
