@@ -1,3 +1,7 @@
 export default {
-  layer: {}
+  layer: {
+    past: [],
+    present: {},
+    future: []
+  }
 };

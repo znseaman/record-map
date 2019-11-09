@@ -23,6 +23,11 @@ class Draw extends Component {
   set = () => {
     const { layer } = this.props;
     if (layer && Object.keys(layer).length > 1) {
+      /* Remove if there is already a layer */
+      const all = this.control.draw.getAll();
+      if (all) {
+        this.control.draw.deleteAll();
+      }
       this.control.draw.set(layer);
     }
   };
@@ -87,7 +92,7 @@ class Draw extends Component {
   }
 }
 
-const mapStateToProps = ({ layer }) => ({ layer });
+const mapStateToProps = ({ layer: { present } }) => ({ layer: present });
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(
