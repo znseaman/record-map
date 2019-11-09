@@ -2,20 +2,27 @@ import { all, call, put, takeEvery } from "redux-saga/effects";
 
 import Api from "../lib/api";
 
-import { updateLayer } from "../actions";
-import { GET_LAYER_FROM_API, POST_LAYER_TO_API } from "../constants";
+import { setLayerHistory, updateLayer } from "../actions";
+import { GET_LAYER_HISTORY_FROM_API, POST_LAYER_TO_API } from "../constants";
 
 export default function* rootSaga() {
   yield all([getLayerFromApi(), postLayerToApi()]);
 }
 
 export function* getLayerFromApi() {
-  yield takeEvery(GET_LAYER_FROM_API, makeGetRequest);
+  yield takeEvery(GET_LAYER_HISTORY_FROM_API, makeGetRequest);
 }
 
 export function* makeGetRequest() {
-  const layer = yield call(Api.get);
-  yield put(updateLayer(layer));
+  const { layer } = yield call(Api.get);
+  /* @TODO: make option to stop remove cache from localforage for past & future within browser */
+  const startFresh = {
+    past: [],
+    present: layer.present || {},
+    future: []
+  };
+
+  yield put(setLayerHistory(startFresh));
 }
 
 export function* postLayerToApi() {
@@ -26,5 +33,5 @@ export function* makePostRequest(action) {
   const layer = yield call(Api.set, action.layer);
   /* @TODO: extract this logging middleware */
   yield call(Api.log);
-  yield put(updateLayer(layer));
+  yield put(setLayerHistory(layer));
 }

@@ -1,7 +1,11 @@
 import React, { Component, createRef } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { getLayerFromApi, postLayerToApi, updateLayer } from "../actions";
+import {
+  getLayerHistoryFromApi,
+  postLayerToApi,
+  updateLayer
+} from "../actions";
 import DrawControl from "react-mapbox-gl-draw";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 
@@ -17,12 +21,14 @@ class Draw extends Component {
   }
 
   get = async () => {
-    this.props.getLayerFromApi();
+    this.props.getLayerHistoryFromApi();
   };
 
   set = () => {
-    const { layer } = this.props;
-    if (layer && Object.keys(layer).length > 1) {
+    const {
+      layer: { present: layer }
+    } = this.props;
+    if (layer && layer.features && layer.features.length > 0) {
       /* Remove if there is already a layer */
       const all = this.control.draw.getAll();
       if (all) {
@@ -40,8 +46,16 @@ class Draw extends Component {
   };
 
   save = async () => {
-    const layer = this.control.draw.getAll();
-    this.props.postLayerToApi(layer);
+    const {
+      layer: { present, past, future }
+    } = this.props;
+    const newPresent = this.control.draw.getAll();
+    var newLayer = {
+      past: [present, ...past],
+      present: newPresent,
+      future
+    };
+    this.props.postLayerToApi(newLayer);
   };
 
   onDrawCreate = ({ features }) => {
@@ -92,11 +106,11 @@ class Draw extends Component {
   }
 }
 
-const mapStateToProps = ({ layer: { present } }) => ({ layer: present });
+const mapStateToProps = ({ layer }) => ({ layer });
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(
-    { getLayerFromApi, postLayerToApi, updateLayer },
+    { getLayerHistoryFromApi, postLayerToApi, updateLayer },
     dispatch
   );
 };

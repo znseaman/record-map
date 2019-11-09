@@ -1,17 +1,19 @@
 import localforage from "localforage";
 import { format } from "date-fns";
 
+import initialState from "../store/initialState";
+
 window.localforage = localforage;
 
 const DRAW_KEY = "draw_layer";
 
 const get = async () => {
   const layer = await localforage.getItem(DRAW_KEY);
-  return layer;
+  return layer || initialState;
 };
 
 const set = async layer => {
-  await localforage.setItem(DRAW_KEY, layer);
+  await localforage.setItem(DRAW_KEY, { layer });
   return layer;
 };
 
