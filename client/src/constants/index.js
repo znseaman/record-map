@@ -1,0 +1,2 @@
+export const GET_LAYER_FROM_API = "GET_LAYER_FROM_API";
+export const UPDATE_LAYER = "UPDATE_LAYER";

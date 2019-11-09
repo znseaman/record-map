@@ -1,7 +1,11 @@
 import React, { Component, createRef } from "react";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { getLayerFromApi, updateLayer } from "../actions";
 import DrawControl from "react-mapbox-gl-draw";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import { format } from "date-fns";
+import Api from "../lib/api";
 
 class Draw extends Component {
   control = createRef();
@@ -10,10 +14,19 @@ class Draw extends Component {
     this.get();
   }
 
-  get = () => {
-    // Get data from localStorage
-    const draw_layer = localStorage.getItem(this.DRAW_KEY);
-    this.control.draw.set(JSON.parse(draw_layer));
+  componentDidUpdate() {
+    this.set();
+  }
+
+  get = async () => {
+    this.props.getLayerFromApi();
+  };
+
+  set = () => {
+    const { layer } = this.props;
+    if (layer && Object.keys(layer).length > 1) {
+      this.control.draw.set(layer);
+    }
   };
 
   assignRef = control => {
@@ -23,10 +36,11 @@ class Draw extends Component {
     }
   };
 
-  DRAW_KEY = "draw_layer";
-  save = () => {
-    const all = this.control.draw.getAll();
-    localStorage.setItem(this.DRAW_KEY, JSON.stringify(all));
+  save = async () => {
+    /* @TODO: simulate a post request using sagas */
+    const all = await Api.set(this.control.draw.getAll());
+    this.props.updateLayer(all);
+
     console.log(
       `Saved update to localStorage at:`,
       format(new Date(Date.now()), "yyyy-MM-dd'T'HH:mm:ss.SSSxxx")
@@ -52,7 +66,7 @@ class Draw extends Component {
 
   onDrawActionable = props => {
     // @TODO: instead of saving all of them, determine which ones have changed and save those instead
-    this.save();
+    // this.save();
   };
 
   onDrawModeChange = props => {
@@ -81,4 +95,13 @@ class Draw extends Component {
   }
 }
 
-export default Draw;
+const mapStateToProps = ({ layer }) => ({ layer });
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators({ getLayerFromApi, updateLayer }, dispatch);
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Draw);

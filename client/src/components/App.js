@@ -1,19 +1,16 @@
-import React, { useState } from "react";
-import "./App.css";
+import React from "react";
+import classes from "./App.module.css";
 import Map from "./Map";
 import Draw from "./Draw";
+import Sidebar from "./Sidebar";
 
-const App = props => {
-  const [style, setStyle] = useState("mapbox://styles/mapbox/dark-v9");
-  const { accessToken } = props;
-
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <Map style={style} accessToken={accessToken}>
-          <Draw />
-        </Map>
-      </header>
+    <div className={classes["App"]}>
+      <Sidebar />
+      <Map>
+        <Draw />
+      </Map>
     </div>
   );
 };
