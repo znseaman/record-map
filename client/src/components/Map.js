@@ -25,7 +25,7 @@ const Map = props => {
 };
 
 Map.propTypes = {
-  style: PropTypes.string.isRequired
+  children: PropTypes.object
 };
 
 export default Map;
