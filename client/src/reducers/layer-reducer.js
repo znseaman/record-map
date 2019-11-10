@@ -9,7 +9,6 @@ export default (state = {}, action) => {
   const { past, present, future } = state;
   switch (action.type) {
     case SET_LAYER_HISTORY:
-      console.log(`layer-reducer`, action.layer);
       return action.layer;
     case UPDATE_LAYER:
       /* @TODO: fix logic here */

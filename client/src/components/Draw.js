@@ -46,6 +46,7 @@ class Draw extends Component {
   };
 
   save = async () => {
+    /* @TODO: move this to an action creator */
     const {
       layer: { present, past, future }
     } = this.props;

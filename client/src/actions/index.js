@@ -4,8 +4,7 @@ import {
   POST_LAYER_TO_API,
   UPDATE_LAYER,
   UNDO_UPDATE_LAYER,
-  REDO_UPDATE_LAYER,
-  RESTART_LAYER
+  REDO_UPDATE_LAYER
 } from "../constants";
 
 export const getLayerHistoryFromApi = () => ({
@@ -18,4 +17,3 @@ export const updateLayer = layer => ({ type: UPDATE_LAYER, layer });
 
 export const undoUpdateLayer = () => ({ type: UNDO_UPDATE_LAYER });
 export const redoUpdateLayer = () => ({ type: REDO_UPDATE_LAYER });
-export const restartLayer = () => ({ type: RESTART_LAYER });
