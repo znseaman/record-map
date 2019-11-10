@@ -2,7 +2,8 @@ import {
   UPDATE_LAYER,
   SET_LAYER_HISTORY,
   UNDO_UPDATE_LAYER,
-  REDO_UPDATE_LAYER
+  REDO_UPDATE_LAYER,
+  UPDATE_FEATURES
 } from "../constants";
 
 export default (state = {}, action) => {
@@ -10,6 +11,21 @@ export default (state = {}, action) => {
   switch (action.type) {
     case SET_LAYER_HISTORY:
       return action.layer;
+    case UPDATE_FEATURES:
+      /* @TODO: fix logic here */
+      if (Object.keys(present).length == 0) {
+        return {
+          past,
+          present: { ...present, ...action.layer },
+          future
+        };
+      }
+
+      return {
+        past: [present, ...past],
+        present: { ...present, ...action.layer },
+        future
+      };
     case UPDATE_LAYER:
       /* @TODO: fix logic here */
       if (Object.keys(present).length == 0) {

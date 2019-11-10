@@ -1,117 +1,123 @@
-import React, { Component, createRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import {
   getLayerHistoryFromApi,
   postLayerToApi,
-  updateLayer
+  updateLayer,
+  updateLayerToApi
 } from "../actions";
 import DrawControl from "react-mapbox-gl-draw";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 
-class Draw extends Component {
-  control = createRef();
+const Draw = props => {
+  var control = useRef({});
+  var selectedFeatures = useRef([]);
 
-  componentDidMount() {
-    this.get();
-  }
+  useEffect(() => {
+    get();
+  }, [])
 
-  componentDidUpdate() {
-    this.set();
-  }
+  useEffect(() => {
+    set();
+  }, [props.layer])
 
-  get = async () => {
-    this.props.getLayerHistoryFromApi();
+  const get = async () => {
+    props.getLayerHistoryFromApi();
   };
 
-  set = () => {
+  const set = () => {
     const {
       layer: { present: layer }
-    } = this.props;
+    } = props;
     if (layer && layer.features && layer.features.length > 0) {
       /* Remove if there is already a layer */
-      const all = this.control.draw.getAll();
+      const all = control.current.draw.getAll();
       if (all) {
-        this.control.draw.deleteAll();
+        control.current.draw.deleteAll();
       }
-      this.control.draw.set(layer);
+
+      control.current.draw.set(layer);
     }
   };
 
-  assignRef = control => {
-    this.control = control;
+  const assignRef = drawControl => {
+    control.current = drawControl;
     if (process.env.NODE_ENV == "development") {
-      window.drawControl = control;
+      window.drawControl = drawControl;
     }
   };
 
-  save = async () => {
-    /* @TODO: move this to an action creator */
-    const {
-      layer: { present, past, future }
-    } = this.props;
-    const newPresent = this.control.draw.getAll();
-    var newLayer = {
-      past: [present, ...past],
-      present: newPresent,
-      future
-    };
-    this.props.postLayerToApi(newLayer);
-  };
+  const save = props.updateLayerToApi;
 
-  onDrawCreate = ({ features }) => {
+  const resetSelected = () => {
+    selectedFeatures.current = [];
+  }
+
+  const onDrawCreate = ({ features }) => {
     console.log(`onDrawCreate`, features);
   };
 
-  onDrawUpdate = props => {
-    console.log(`onDrawUpdate`, props);
-    console.log(`onDrawUpdate Features`, props.features);
-  };
+  const onDrawUpdate = event => {
+    console.log(`onDrawUpdate`, event);
+    const { type, features } = event;
 
-  onDrawSelectionChange = ({ features }) => {
-    console.log(`onDrawUpdate`, features);
-    // Zero features means the user has clicked away from adding a feature ("direct_select")
-    if (features.length == 0) {
-      this.save();
+    if (type === 'draw.update') {
+      selectedFeatures.current = features;
     }
   };
 
-  onDrawActionable = props => {
-    // @TODO: instead of saving all of them, determine which ones have changed and save those instead
-    // this.save();
+  const onDrawSelectionChange = event => {
+    console.log(`onDrawSelectionChange`, event);
+
+    // Zero features means the user has clicked away from adding a feature ("direct_select")
+    if (event.features.length == 0) {
+      save(selectedFeatures.current);
+      resetSelected();
+      return;
+    }
+
+    switch (event.type) {
+      case 'draw.selectionchange':
+        selectedFeatures.current = event.features
+        break;
+    }
   };
 
-  onDrawModeChange = props => {
-    if (props.mode == "direct_select") {
+  const onDrawActionable = event => {
+    // @TODO: instead of saving all of them, determine which ones have changed and save those instead
+    // console.log(`onDrawActionable`, event)
+  };
+
+  const onDrawModeChange = event => {
+    if (event.mode == "direct_select") {
       //   @TODO: start an edit mode
     }
-    console.log(`onDrawModeChange`, props);
+    console.log(`onDrawModeChange`, event);
   };
 
-  onDrawRender = props => {
-    // console.log(`onDrawRender`, props);
+  const onDrawRender = event => {
+    // console.log(`onDrawRender`, event);
   };
 
-  render() {
-    return (
-      <DrawControl
-        ref={this.assignRef}
-        onDrawCreate={this.onDrawCreate}
-        onDrawUpdate={this.onDrawUpdate}
-        onDrawSelectionChange={this.onDrawSelectionChange}
-        onDrawActionable={this.onDrawActionable}
-        onDrawModeChange={this.onDrawModeChange}
-        onDrawRender={this.onDrawRender}
-      ></DrawControl>
-    );
-  }
+  return (
+    <DrawControl
+      ref={assignRef}
+      onDrawCreate={onDrawCreate}
+      onDrawUpdate={onDrawUpdate}
+      onDrawSelectionChange={onDrawSelectionChange}
+      onDrawActionable={onDrawActionable}
+      onDrawModeChange={onDrawModeChange}
+      onDrawRender={onDrawRender}
+    ></DrawControl>
+  );
 }
 
 const mapStateToProps = ({ layer }) => ({ layer });
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(
-    { getLayerHistoryFromApi, postLayerToApi, updateLayer },
+    { getLayerHistoryFromApi, postLayerToApi, updateLayer, updateLayerToApi },
     dispatch
   );
 };
