@@ -30,8 +30,8 @@ export function* postLayerToApi() {
 }
 
 export function* makePostRequest(action) {
-  const { layer } = yield call(Api.set, action.layer);
+  const layer = yield call(Api.set, action.layer);
   /* @TODO: extract this logging middleware */
   yield call(Api.log);
-  yield put(updateLayer(layer));
+  yield put(setLayerHistory(layer));
 }
