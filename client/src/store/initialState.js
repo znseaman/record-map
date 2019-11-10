@@ -1,7 +1,10 @@
 export default {
   layer: {
     past: [],
-    present: {},
+    present: {
+      type: "FeatureCollection",
+      features: []
+    },
     future: []
   }
 };

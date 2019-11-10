@@ -27,18 +27,15 @@ const Draw = props => {
   };
 
   const set = () => {
-    const {
-      layer: { present: layer }
-    } = props;
-    if (layer && layer.features && layer.features.length > 0) {
-      /* Remove if there is already a layer */
-      const all = control.current.draw.getAll();
-      if (all) {
-        control.current.draw.deleteAll();
-      }
-
-      control.current.draw.set(layer);
+    const { layer } = props;
+    /* @TODO: diff the current and newly changed layer to see if they have changed before updating possibly using jsondiffpatch, turf, deep-diff */
+    /* Remove if there is already a layer */
+    const all = control.current.draw.getAll();
+    if (all) {
+      control.current.draw.deleteAll();
     }
+
+    control.current.draw.set(layer);
   };
 
   const assignRef = drawControl => {
@@ -113,7 +110,7 @@ const Draw = props => {
   );
 }
 
-const mapStateToProps = ({ layer }) => ({ layer });
+const mapStateToProps = ({ layer: { present } }) => ({ layer: present });
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(

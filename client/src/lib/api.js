@@ -2,13 +2,9 @@ import localforage from "localforage";
 import { format } from "date-fns";
 
 import initialState from "../store/initialState";
+import replaceFeatures from '../lib/replaceFeatures'
 
 window.localforage = localforage;
-
-const EMPTY_GEOJSON = {
-  type: "FeatureCollection",
-  features: []
-};
 
 const DRAW_KEY = "draw_layer";
 
@@ -28,25 +24,7 @@ const update = async features => {
   if (typeof res == 'undefined') return undefined;
   const { layer } = res;
 
-  // If empty present, add empty GeoJSON features
-  if (Object.keys(layer.present).length == 0) {
-    layer.present = EMPTY_GEOJSON;
-  }
-
-  const wasEmpty = layer.present.features.length == 0;
-  for (let feature of features) {
-    if (wasEmpty) {
-      layer.present.features = [feature, ...layer.present.features];
-    } else {
-      /* Find id */
-      const index = layer.present.features.findIndex(f => f.id == feature.id);
-      if (index != -1) {
-        layer.present.feature[index] = feature;
-      } else {
-        layer.present.features = [feature, ...layer.present.features];
-      }
-    }
-  }
+  layer.present = replaceFeatures(layer.present, features)
 
   await localforage.setItem(DRAW_KEY, { layer });
 
