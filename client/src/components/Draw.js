@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import {
   getLayerHistoryFromApi,
-  postLayerToApi,
   updateLayer,
   updateLayerToApi
 } from "../actions";
@@ -114,7 +113,7 @@ const mapStateToProps = ({ layer: { present } }) => ({ layer: present });
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(
-    { getLayerHistoryFromApi, postLayerToApi, updateLayer, updateLayerToApi },
+    { getLayerHistoryFromApi, updateLayer, updateLayerToApi },
     dispatch
   );
 };
