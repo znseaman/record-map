@@ -7,7 +7,6 @@ import {
 } from "../constants";
 
 import initialState from '../store/initialState';
-import replaceFeatures from '../lib/replaceFeatures';
 
 export default (state = initialState.layer, action) => {
   const { past, present, future } = state;
@@ -16,12 +15,7 @@ export default (state = initialState.layer, action) => {
       return action.layer;
     case UPDATE_FEATURES:
       /* @TODO: separate out add & update functionality */
-      /* @TODO: extract the return into a function so it can be called within lib/api.js */
-      return {
-        past: [present, ...past],
-        present: replaceFeatures(present, action.features),
-        future
-      };
+      return updateFeatures(state, action);
     case UPDATE_LAYER:
       return {
         past: [present, ...past],
@@ -53,3 +47,30 @@ export default (state = initialState.layer, action) => {
   }
   return state;
 };
+
+export function updateFeatures(state, action) {
+  const { past, present, future } = state;
+  return {
+    past: [present, ...past],
+    present: replaceFeatures(present, action.features),
+    future
+  }
+}
+
+export function replaceFeatures(present, features) {
+  /* Don't manipulate present object */
+  var localPresent = { ...present };
+  for (let feature of features) {
+    const index = localPresent.features.findIndex(f => f.id == feature.id);
+    if (index != -1) {
+      /* Replace the feature by index */
+      localPresent.features[index] = feature;
+    } else {
+      /* Add the feature */
+      localPresent.features = [feature, ...localPresent.features];
+    }
+  }
+
+  return localPresent;
+}
+

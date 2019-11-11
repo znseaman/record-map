@@ -34,7 +34,7 @@ export function* updateLayerToApi() {
 }
 
 export function* makeUpdateRequest(action) {
-  const layer = yield call(Api.update, action.features);
+  yield call(Api.update, action);
   /* @TODO: extract this logging middleware */
   yield call(Api.log);
   yield put(updateFeatures(action.features));
