@@ -23,10 +23,10 @@ const update = async features => {
   const res = await get();
   if (typeof res == 'undefined') return undefined;
   const { layer } = res;
+  const { past, present, future } = layer;
 
-  layer.present = replaceFeatures(layer.present, features)
-
-  await localforage.setItem(DRAW_KEY, { layer });
+  /* NOTE: duplicating UPDATE_FEATURES action for localforage API */
+  await localforage.setItem(DRAW_KEY, { layer: { past: [present, ...past], present: replaceFeatures(present, features), future } });
 
   return layer.present;
 };

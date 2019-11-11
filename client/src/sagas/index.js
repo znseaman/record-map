@@ -15,14 +15,7 @@ export function* getLayerFromApi() {
 
 export function* makeGetRequest() {
   const { layer } = yield call(Api.get);
-  /* @TODO: make option to stop remove cache from localforage for past & future within browser */
-  const startFresh = {
-    past: [],
-    present: layer.present || {},
-    future: []
-  };
-
-  yield put(setLayerHistory(startFresh));
+  yield put(setLayerHistory(layer));
 }
 
 export function* postLayerToApi() {
@@ -44,5 +37,5 @@ export function* makeUpdateRequest(action) {
   const layer = yield call(Api.update, action.features);
   /* @TODO: extract this logging middleware */
   yield call(Api.log);
-  yield put(updateFeatures(layer));
+  yield put(updateFeatures(action.features));
 }

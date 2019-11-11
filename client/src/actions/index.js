@@ -22,4 +22,4 @@ export const redoUpdateLayer = () => ({ type: REDO_UPDATE_LAYER });
 
 
 export const updateLayerToApi = features => ({ type: UPDATE_LAYER_TO_API, features });
-export const updateFeatures = layer => ({ type: UPDATE_FEATURES, layer });
+export const updateFeatures = features => ({ type: UPDATE_FEATURES, features });
