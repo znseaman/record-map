@@ -1,5 +1,8 @@
+import uuid from 'uuid/v4'
+
 const features = [
   {
+    "id": uuid(),
     "type": "Feature",
     "properties": {},
     "geometry": {
@@ -11,6 +14,7 @@ const features = [
     }
   },
   {
+    "id": uuid(),
     "type": "Feature",
     "properties": {},
     "geometry": {
@@ -40,6 +44,7 @@ const features = [
     }
   },
   {
+    "id": uuid(),
     "type": "Feature",
     "properties": {},
     "geometry": {
@@ -75,6 +80,7 @@ const features = [
     }
   },
   {
+    "id": uuid(),
     "type": "Feature",
     "properties": {},
     "geometry": {
