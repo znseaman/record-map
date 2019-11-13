@@ -1,8 +1,8 @@
 import {
   UPDATE_LAYER,
   SET_LAYER_HISTORY,
-  UNDO_UPDATE_LAYER,
-  REDO_UPDATE_LAYER,
+  UNDO,
+  REDO,
   UPDATE_FEATURES
 } from "../constants";
 
@@ -22,7 +22,7 @@ export default (state = initialState.layer, action) => {
         present: { ...present, ...action.layer },
         future
       };
-    case UNDO_UPDATE_LAYER:
+    case UNDO:
       if (past.length == 0) return state;
 
       var newFuture = [present, ...future];
@@ -33,7 +33,7 @@ export default (state = initialState.layer, action) => {
         present: newPresent,
         future: newFuture
       };
-    case REDO_UPDATE_LAYER:
+    case REDO:
       if (future.length == 0) return state;
 
       var [newPresent, ...newFuture] = future;

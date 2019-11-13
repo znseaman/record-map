@@ -3,7 +3,7 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import classes from "./Sidebar.module.css";
 
-import { undoUpdateLayer, redoUpdateLayer } from "../actions";
+import { undo, redo } from "../actions";
 
 const Sidebar = props => {
   const { undo, redo } = props;
@@ -11,8 +11,8 @@ const Sidebar = props => {
     <aside className={classes["Sidebar"]}>
       <h1>Record Map</h1>
       <p>A map able to record a layer and undo / redo actions</p>
-      <button onClick={() => undo()}>Undo</button>
-      <button onClick={() => redo()}>Redo</button>
+      <button onClick={undo}>Undo</button>
+      <button onClick={redo}>Redo</button>
     </aside>
   );
 };
@@ -20,8 +20,8 @@ const Sidebar = props => {
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(
     {
-      undo: undoUpdateLayer,
-      redo: redoUpdateLayer
+      undo,
+      redo
     },
     dispatch
   );

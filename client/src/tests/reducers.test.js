@@ -1,4 +1,4 @@
-import { undoUpdateLayer, redoUpdateLayer, updateFeatures } from '../actions';
+import { undo, redo, updateFeatures } from '../actions';
 
 import reducer from '../reducers';
 import initialState from '../store/initialState';
@@ -60,7 +60,6 @@ describe('Layer Reducer', () => {
       const action = updateFeatures([subZeroFeatureModified]);
       const state = reducer({ layer: oneAdded }, action);
 
-      console.log(state.layer.past[0])
       expect(state.layer.past.length).toBe(2);
       expect(state.layer.past[0]).toBe(oneAdded.present);
       expect(state.layer.past[1]).toBe(oneAdded.past[0]);
@@ -78,9 +77,9 @@ describe('Layer Reducer', () => {
     })
   })
 
-  describe('undoUpdateLayer', () => {
+  describe('undo', () => {
     it('should match the state passed in if the past is empty', () => {
-      const action = undoUpdateLayer();
+      const action = undo();
       const state = reducer(initialState, action);
 
       expect(state).toBe(initialState);
@@ -92,7 +91,7 @@ describe('Layer Reducer', () => {
         present: { ...initialState.layer.present, features: [features[0]] },
         future: []
       };
-      const action = undoUpdateLayer();
+      const action = undo();
       const state = reducer({ layer: oneAdded }, action);
 
       expect(state.layer.past.length).toBe(0);
@@ -105,9 +104,9 @@ describe('Layer Reducer', () => {
     })
   })
 
-  describe('redoUpdateLayer', () => {
+  describe('redo', () => {
     it('should match the state passed in if the future is empty', () => {
-      const action = redoUpdateLayer();
+      const action = redo();
       const state = reducer(initialState, action);
 
       expect(state).toBe(initialState);
@@ -119,7 +118,7 @@ describe('Layer Reducer', () => {
         present: { ...initialState.layer.present },
         future: [{ ...initialState.layer.present, features: [features[0]] }]
       };
-      const action = redoUpdateLayer();
+      const action = redo();
       const state = reducer({ layer: oneUndo }, action);
 
       expect(state.layer.past.length).toBe(1);

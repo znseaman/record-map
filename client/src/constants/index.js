@@ -3,8 +3,8 @@ export const SET_LAYER_HISTORY = "SET_LAYER_HISTORY";
 
 export const UPDATE_LAYER = "UPDATE_LAYER";
 
-export const UNDO_UPDATE_LAYER = "UNDO_UPDATE_LAYER";
-export const REDO_UPDATE_LAYER = "REDO_UPDATE_LAYER";
+export const UNDO = "UNDO";
+export const REDO = "REDO";
 
 export const UPDATE_LAYER_TO_API = "UPDATE_LAYER_TO_API";
 export const UPDATE_FEATURES = "UPDATE_FEATURES";
