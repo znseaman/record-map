@@ -1,14 +1,13 @@
 import {
   GET_LAYER_HISTORY_FROM_API,
   SET_LAYER_HISTORY,
-  UPDATE_LAYER,
-  UNDO_UPDATE_LAYER,
-  REDO_UPDATE_LAYER,
+  UNDO,
+  REDO,
   UPDATE_LAYER_TO_API,
   UPDATE_FEATURES
 } from '../constants'
 
-import { setLayerHistory, getLayerHistoryFromApi, updateLayer, undoUpdateLayer, redoUpdateLayer, updateLayerToApi, updateFeatures } from "../actions";
+import { setLayerHistory, getLayerHistoryFromApi, undo, redo, updateLayerToApi, updateFeatures } from "../actions";
 
 import initialState from '../store/initialState';
 import features from '../data/features';
@@ -35,31 +34,17 @@ describe('Layer Actions', () => {
     })
   });
 
-  describe("updateLayer", () => {
-    it('should return UPDATE_LAYER as the action type', () => {
-      const { layer: { present: layer } } = initialState;
-      const action = updateLayer(layer);
-      expect(action.type).toBe(UPDATE_LAYER)
-    })
-
-    it('should return provided layer on the action', () => {
-      const { layer: { present: layer } } = initialState;
-      const action = updateLayer(layer);
-      expect(action.layer).toBe(layer)
+  describe("undo", () => {
+    it('should return UNDO as the action type', () => {
+      const action = undo();
+      expect(action.type).toBe(UNDO)
     })
   });
 
-  describe("undoUpdateLayer", () => {
-    it('should return UNDO_UPDATE_LAYER as the action type', () => {
-      const action = undoUpdateLayer();
-      expect(action.type).toBe(UNDO_UPDATE_LAYER)
-    })
-  });
-
-  describe("redoUpdateLayer", () => {
-    it('should return REDO_UPDATE_LAYER as the action type', () => {
-      const action = redoUpdateLayer();
-      expect(action.type).toBe(REDO_UPDATE_LAYER)
+  describe("redo", () => {
+    it('should return REDO as the action type', () => {
+      const action = redo();
+      expect(action.type).toBe(REDO)
     })
   });
 

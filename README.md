@@ -8,7 +8,7 @@ I liked playing around with the Redux DevTools and thought it would be cool to b
 
 ### Features
 
-- Detect if the map shape was changed before dispatching `UPDATE_LAYER` action, instead of calling it each time regardless of if it has changed
+- Detect if the map shape was changed before dispatching `UPDATE_FEATURES` action, instead of calling it each time regardless of if it has changed
 
 ### User Experience (UX)
 

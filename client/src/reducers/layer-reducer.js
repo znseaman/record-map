@@ -1,5 +1,4 @@
 import {
-  UPDATE_LAYER,
   SET_LAYER_HISTORY,
   UNDO,
   REDO,
@@ -16,12 +15,6 @@ export default (state = initialState.layer, action) => {
     case UPDATE_FEATURES:
       /* @TODO: separate out add & update functionality */
       return updateFeatures(state, action);
-    case UPDATE_LAYER:
-      return {
-        past: [present, ...past],
-        present: { ...present, ...action.layer },
-        future
-      };
     case UNDO:
       if (past.length == 0) return state;
 

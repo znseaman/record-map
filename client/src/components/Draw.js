@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import {
   getLayerHistoryFromApi,
-  updateLayer,
   updateLayerToApi
 } from "../actions";
 import DrawControl from "react-mapbox-gl-draw";
@@ -113,7 +112,7 @@ const mapStateToProps = ({ layer: { present } }) => ({ layer: present });
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(
-    { getLayerHistoryFromApi, updateLayer, updateLayerToApi },
+    { getLayerHistoryFromApi, updateLayerToApi },
     dispatch
   );
 };
