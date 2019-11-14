@@ -1,4 +1,4 @@
-import { undo, redo, updateFeatures, deleteFeatures } from '../actions';
+import { undoLayer, redoLayer, updateFeatures, deleteFeatures } from '../actions';
 
 import reducer from '../reducers';
 import initialState from '../store/initialState';
@@ -96,9 +96,9 @@ describe('Layer Reducer', () => {
     })
   })
 
-  describe('undo', () => {
+  describe('undoLayer', () => {
     it('should match the state passed in if the past is empty', () => {
-      const action = undo();
+      const action = undoLayer();
       const state = reducer(initialState, action);
 
       expect(state).toBe(initialState);
@@ -110,7 +110,7 @@ describe('Layer Reducer', () => {
         present: { ...initialState.layer.present, features: [features[0]] },
         future: []
       };
-      const action = undo();
+      const action = undoLayer();
       const state = reducer({ layer: oneAdded }, action);
 
       expect(state.layer.past.length).toBe(0);
@@ -123,9 +123,9 @@ describe('Layer Reducer', () => {
     })
   })
 
-  describe('redo', () => {
+  describe('redoLayer', () => {
     it('should match the state passed in if the future is empty', () => {
-      const action = redo();
+      const action = redoLayer();
       const state = reducer(initialState, action);
 
       expect(state).toBe(initialState);
@@ -137,7 +137,7 @@ describe('Layer Reducer', () => {
         present: { ...initialState.layer.present },
         future: [{ ...initialState.layer.present, features: [features[0]] }]
       };
-      const action = redo();
+      const action = redoLayer();
       const state = reducer({ layer: oneUndo }, action);
 
       expect(state.layer.past.length).toBe(1);

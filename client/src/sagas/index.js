@@ -2,7 +2,7 @@ import { all, call, put, takeEvery } from "redux-saga/effects";
 
 import Api from "../lib/api";
 
-import { setLayerHistory, updateFeatures, deleteFeatures, undo, redo } from "../actions";
+import { setLayerHistory, updateFeatures, deleteFeatures, undoLayer, redoLayer } from "../actions";
 import {
   GET_LAYER_HISTORY_FROM_API, UPDATE_LAYER_TO_API,
   DELETE_FEATURES_FROM_LAYER_STORAGE, UNDO_LAYER_TO_LOCAL_STORAGE,
@@ -52,7 +52,7 @@ export function* makeUndoRequest() {
   yield call(Api.undo);
   /* @TODO: extract this logging middleware */
   yield call(Api.log);
-  yield put(undo());
+  yield put(undoLayer());
 }
 
 export function* redoLayerToLocalStorage() {
@@ -63,5 +63,5 @@ export function* makeRedoRequest() {
   yield call(Api.redo);
   /* @TODO: extract this logging middleware */
   yield call(Api.log);
-  yield put(redo());
+  yield put(redoLayer());
 }

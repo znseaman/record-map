@@ -1,7 +1,7 @@
 import {
   SET_LAYER_HISTORY,
-  UNDO,
-  REDO,
+  UNDO_LAYER,
+  REDO_LAYER,
   UPDATE_FEATURES,
   DELETE_FEATURES
 } from "../constants";
@@ -18,9 +18,9 @@ export default (state = initialState.layer, action) => {
       return updateFeatures(state, action);
     case DELETE_FEATURES:
       return deleteFeatures(state, action);
-    case UNDO:
+    case UNDO_LAYER:
       return undoFeatures(state);
-    case REDO:
+    case REDO_LAYER:
       return redoFeatures(state);
   }
   return state;
