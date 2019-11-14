@@ -13,20 +13,17 @@ const Draw = props => {
   var control = useRef({});
   var selectedFeatures = useRef([]);
 
+  const { get, save, remove, layer } = props;
+
   useEffect(() => {
     get();
   }, [])
 
   useEffect(() => {
     set();
-  }, [props.layer])
-
-  const get = async () => {
-    props.getLayerHistoryFromApi();
-  };
+  }, [layer])
 
   const set = () => {
-    const { layer } = props;
     /* @TODO: diff the current and newly changed layer to see if they have changed before updating possibly using jsondiffpatch, turf, deep-diff */
     /* Remove if there is already a layer */
     const all = control.current.draw.getAll();
@@ -43,9 +40,6 @@ const Draw = props => {
       window.drawControl = drawControl;
     }
   };
-
-  const save = props.updateLayerToApi;
-  const remove = props.deleteFeaturesFromLayerStorage;
 
   const resetSelected = () => {
     selectedFeatures.current = [];
@@ -133,7 +127,11 @@ const mapStateToProps = ({ layer: { present } }) => ({ layer: present });
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(
-    { getLayerHistoryFromApi, updateLayerToApi, deleteFeaturesFromLayerStorage },
+    {
+      get: getLayerHistoryFromApi,
+      save: updateLayerToApi,
+      remove: deleteFeaturesFromLayerStorage,
+    },
     dispatch
   );
 };
