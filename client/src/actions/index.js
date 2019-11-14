@@ -4,7 +4,9 @@ import {
   UNDO,
   REDO,
   UPDATE_LAYER_TO_API,
-  UPDATE_FEATURES
+  UPDATE_FEATURES,
+  DELETE_FEATURES_FROM_LAYER_STORAGE,
+  DELETE_FEATURES,
 } from "../constants";
 
 export const getLayerHistoryFromApi = () => ({
@@ -17,3 +19,6 @@ export const redo = () => ({ type: REDO });
 
 export const updateLayerToApi = features => ({ type: UPDATE_LAYER_TO_API, features });
 export const updateFeatures = features => ({ type: UPDATE_FEATURES, features });
+
+export const deleteFeaturesFromLayerStorage = features => ({ type: DELETE_FEATURES_FROM_LAYER_STORAGE, features })
+export const deleteFeatures = features => ({ type: DELETE_FEATURES, features })

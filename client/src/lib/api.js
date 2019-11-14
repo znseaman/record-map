@@ -2,7 +2,7 @@ import localforage from "localforage";
 import { format } from "date-fns";
 
 import initialState from "../store/initialState";
-import { updateFeatures } from '../reducers/layer-reducer';
+import { updateFeatures, deleteFeatures } from '../reducers/layer-reducer';
 
 window.localforage = localforage;
 
@@ -29,6 +29,16 @@ const update = async action => {
   return layer;
 };
 
+const destroy = async action => {
+  const res = await get();
+  if (typeof res == 'undefined') return undefined;
+  const { layer } = res;
+
+  await localforage.setItem(DRAW_KEY, { layer: deleteFeatures(layer, action) })
+
+  return layer;
+};
+
 const log = async () => {
   console.log(
     `Saved update to localforage at:`,
@@ -40,5 +50,6 @@ export default {
   get,
   set,
   log,
-  update
+  update,
+  destroy
 };

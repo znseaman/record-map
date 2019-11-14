@@ -3,7 +3,8 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import {
   getLayerHistoryFromApi,
-  updateLayerToApi
+  updateLayerToApi,
+  deleteFeaturesFromLayerStorage
 } from "../actions";
 import DrawControl from "react-mapbox-gl-draw";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
@@ -44,6 +45,7 @@ const Draw = props => {
   };
 
   const save = props.updateLayerToApi;
+  const remove = props.deleteFeaturesFromLayerStorage;
 
   const resetSelected = () => {
     selectedFeatures.current = [];
@@ -51,6 +53,22 @@ const Draw = props => {
 
   const onDrawCreate = ({ features }) => {
     console.log(`onDrawCreate`, features);
+  };
+
+  const onDrawDelete = event => {
+    console.log(`onDrawDelete`, event)
+    const { type, features } = event;
+    if (type === 'draw.delete') {
+      remove(features);
+    }
+  };
+
+  const onDrawCombine = event => {
+    console.log(`onDrawCombine`, event)
+  };
+
+  const onDrawUncombine = event => {
+    console.log(`onDrawUncombine`, event)
   };
 
   const onDrawUpdate = event => {
@@ -99,6 +117,9 @@ const Draw = props => {
     <DrawControl
       ref={assignRef}
       onDrawCreate={onDrawCreate}
+      onDrawDelete={onDrawDelete}
+      onDrawCombine={onDrawCombine}
+      onDrawUncombine={onDrawUncombine}
       onDrawUpdate={onDrawUpdate}
       onDrawSelectionChange={onDrawSelectionChange}
       onDrawActionable={onDrawActionable}
@@ -112,7 +133,7 @@ const mapStateToProps = ({ layer: { present } }) => ({ layer: present });
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(
-    { getLayerHistoryFromApi, updateLayerToApi },
+    { getLayerHistoryFromApi, updateLayerToApi, deleteFeaturesFromLayerStorage },
     dispatch
   );
 };

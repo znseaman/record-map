@@ -2,7 +2,8 @@ import {
   SET_LAYER_HISTORY,
   UNDO,
   REDO,
-  UPDATE_FEATURES
+  UPDATE_FEATURES,
+  DELETE_FEATURES
 } from "../constants";
 
 import initialState from '../store/initialState';
@@ -15,6 +16,8 @@ export default (state = initialState.layer, action) => {
     case UPDATE_FEATURES:
       /* @TODO: separate out add & update functionality */
       return updateFeatures(state, action);
+    case DELETE_FEATURES:
+      return deleteFeatures(state, action);
     case UNDO:
       if (past.length == 0) return state;
 
@@ -67,3 +70,21 @@ export function replaceFeatures(present, features) {
   return localPresent;
 }
 
+export function deleteFeatures(state, action) {
+  const { past, present, future } = state;
+  return {
+    past: [present, ...past],
+    present: removeFeatures(present, action.features),
+    future
+  }
+}
+
+export function removeFeatures(present, features) {
+  /* Don't manipulate present object */
+  var localPresent = { ...present };
+  var keys = features.map(f => f.id);
+
+  localPresent.features = localPresent.features.filter(f => !keys.includes(f.id));
+
+  return localPresent;
+}
