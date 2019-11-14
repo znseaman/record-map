@@ -19,16 +19,7 @@ export default (state = initialState.layer, action) => {
     case DELETE_FEATURES:
       return deleteFeatures(state, action);
     case UNDO:
-      if (past.length == 0) return state;
-
-      var newFuture = [present, ...future];
-      var [newPresent, ...newPast] = past;
-
-      return {
-        past: newPast,
-        present: newPresent,
-        future: newFuture
-      };
+      return undoFeatures(state);
     case REDO:
       if (future.length == 0) return state;
 
@@ -87,4 +78,19 @@ export function removeFeatures(present, features) {
   localPresent.features = localPresent.features.filter(f => !keys.includes(f.id));
 
   return localPresent;
+}
+
+export function undoFeatures(state) {
+  const { past, present, future } = state;
+
+  if (past.length == 0) return state;
+
+  var newFuture = [present, ...future];
+  var [newPresent, ...newPast] = past;
+
+  return {
+    past: newPast,
+    present: newPresent,
+    future: newFuture
+  };
 }

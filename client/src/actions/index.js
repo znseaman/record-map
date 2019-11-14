@@ -7,6 +7,7 @@ import {
   UPDATE_FEATURES,
   DELETE_FEATURES_FROM_LAYER_STORAGE,
   DELETE_FEATURES,
+  UNDO_LAYER_TO_LOCAL_STORAGE
 } from "../constants";
 
 export const getLayerHistoryFromApi = () => ({
@@ -14,6 +15,7 @@ export const getLayerHistoryFromApi = () => ({
 });
 export const setLayerHistory = layer => ({ type: SET_LAYER_HISTORY, layer });
 
+export const undoLayerToLocalStorage = () => ({ type: UNDO_LAYER_TO_LOCAL_STORAGE })
 export const undo = () => ({ type: UNDO });
 export const redo = () => ({ type: REDO });
 

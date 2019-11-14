@@ -3,7 +3,7 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import classes from "./Sidebar.module.css";
 
-import { undo, redo } from "../actions";
+import { undoLayerToLocalStorage, redo } from "../actions";
 
 const Sidebar = props => {
   const { undo, redo } = props;
@@ -20,7 +20,7 @@ const Sidebar = props => {
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(
     {
-      undo,
+      undo: undoLayerToLocalStorage,
       redo
     },
     dispatch

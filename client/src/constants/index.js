@@ -1,6 +1,7 @@
 export const GET_LAYER_HISTORY_FROM_API = "GET_LAYER_HISTORY_FROM_API";
 export const SET_LAYER_HISTORY = "SET_LAYER_HISTORY";
 
+export const UNDO_LAYER_TO_LOCAL_STORAGE = "UNDO_LAYER_TO_LOCAL_STORAGE";
 export const UNDO = "UNDO";
 export const REDO = "REDO";
 
