@@ -2,14 +2,15 @@ import { all, call, put, takeEvery } from "redux-saga/effects";
 
 import Api from "../lib/api";
 
-import { setLayerHistory, updateFeatures, deleteFeatures, undo } from "../actions";
+import { setLayerHistory, updateFeatures, deleteFeatures, undo, redo } from "../actions";
 import {
   GET_LAYER_HISTORY_FROM_API, UPDATE_LAYER_TO_API,
-  DELETE_FEATURES_FROM_LAYER_STORAGE, UNDO_LAYER_TO_LOCAL_STORAGE
+  DELETE_FEATURES_FROM_LAYER_STORAGE, UNDO_LAYER_TO_LOCAL_STORAGE,
+  REDO_LAYER_TO_LOCAL_STORAGE,
 } from "../constants";
 
 export default function* rootSaga() {
-  yield all([getLayerFromApi(), updateLayerToApi(), deleteFeaturesFromLayerStorage(), undoLayerToLocalStorage()]);
+  yield all([getLayerFromApi(), updateLayerToApi(), deleteFeaturesFromLayerStorage(), undoLayerToLocalStorage(), redoLayerToLocalStorage()]);
 }
 
 export function* getLayerFromApi() {
@@ -44,12 +45,23 @@ export function* makeDeleteRequest(action) {
 }
 
 export function* undoLayerToLocalStorage() {
-  yield takeEvery(UNDO_LAYER_TO_LOCAL_STORAGE, makeSetRequest);
+  yield takeEvery(UNDO_LAYER_TO_LOCAL_STORAGE, makeUndoRequest);
 }
 
-export function* makeSetRequest() {
+export function* makeUndoRequest() {
   yield call(Api.undo);
   /* @TODO: extract this logging middleware */
   yield call(Api.log);
   yield put(undo());
+}
+
+export function* redoLayerToLocalStorage() {
+  yield takeEvery(REDO_LAYER_TO_LOCAL_STORAGE, makeRedoRequest);
+}
+
+export function* makeRedoRequest() {
+  yield call(Api.redo);
+  /* @TODO: extract this logging middleware */
+  yield call(Api.log);
+  yield put(redo());
 }

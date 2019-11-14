@@ -21,16 +21,7 @@ export default (state = initialState.layer, action) => {
     case UNDO:
       return undoFeatures(state);
     case REDO:
-      if (future.length == 0) return state;
-
-      var [newPresent, ...newFuture] = future;
-      var newPast = [present, ...past];
-
-      return {
-        past: newPast,
-        present: newPresent,
-        future: newFuture
-      };
+      return redoFeatures(state);
   }
   return state;
 };
@@ -87,6 +78,21 @@ export function undoFeatures(state) {
 
   var newFuture = [present, ...future];
   var [newPresent, ...newPast] = past;
+
+  return {
+    past: newPast,
+    present: newPresent,
+    future: newFuture
+  };
+}
+
+export function redoFeatures(state) {
+  const { past, present, future } = state;
+
+  if (future.length == 0) return state;
+
+  var [newPresent, ...newFuture] = future;
+  var newPast = [present, ...past];
 
   return {
     past: newPast,
