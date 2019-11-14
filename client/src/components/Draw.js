@@ -17,11 +17,11 @@ const Draw = props => {
 
   useEffect(() => {
     get();
-  }, [])
+  }, []);
 
   useEffect(() => {
     set();
-  }, [layer])
+  }, [layer]);
 
   const set = () => {
     /* @TODO: diff the current and newly changed layer to see if they have changed before updating possibly using jsondiffpatch, turf, deep-diff */
@@ -43,33 +43,33 @@ const Draw = props => {
 
   const resetSelected = () => {
     selectedFeatures.current = [];
-  }
+  };
 
   const onDrawCreate = ({ features }) => {
     console.log(`onDrawCreate`, features);
   };
 
   const onDrawDelete = event => {
-    console.log(`onDrawDelete`, event)
+    console.log(`onDrawDelete`, event);
     const { type, features } = event;
-    if (type === 'draw.delete') {
+    if (type === "draw.delete") {
       remove(features);
     }
   };
 
   const onDrawCombine = event => {
-    console.log(`onDrawCombine`, event)
+    console.log(`onDrawCombine`, event);
   };
 
   const onDrawUncombine = event => {
-    console.log(`onDrawUncombine`, event)
+    console.log(`onDrawUncombine`, event);
   };
 
   const onDrawUpdate = event => {
     console.log(`onDrawUpdate`, event);
     const { type, features } = event;
 
-    if (type === 'draw.update') {
+    if (type === "draw.update") {
       selectedFeatures.current = features;
     }
   };
@@ -85,8 +85,8 @@ const Draw = props => {
     }
 
     switch (event.type) {
-      case 'draw.selectionchange':
-        selectedFeatures.current = event.features
+      case "draw.selectionchange":
+        selectedFeatures.current = event.features;
         break;
     }
   };
@@ -121,7 +121,7 @@ const Draw = props => {
       onDrawRender={onDrawRender}
     ></DrawControl>
   );
-}
+};
 
 const mapStateToProps = ({ layer: { present } }) => ({ layer: present });
 
@@ -130,7 +130,7 @@ const mapDispatchToProps = dispatch => {
     {
       get: getLayerHistoryFromApi,
       save: updateLayerToApi,
-      remove: deleteFeaturesFromLayerStorage,
+      remove: deleteFeaturesFromLayerStorage
     },
     dispatch
   );
