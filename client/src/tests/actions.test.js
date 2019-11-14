@@ -4,10 +4,11 @@ import {
   UNDO,
   REDO,
   UPDATE_LAYER_TO_API,
-  UPDATE_FEATURES
+  UPDATE_FEATURES,
+  DELETE_FEATURES,
 } from '../constants'
 
-import { setLayerHistory, getLayerHistoryFromApi, undo, redo, updateLayerToApi, updateFeatures } from "../actions";
+import { setLayerHistory, getLayerHistoryFromApi, undo, redo, updateLayerToApi, updateFeatures, deleteFeatures } from "../actions";
 
 import initialState from '../store/initialState';
 import features from '../data/features';
@@ -68,6 +69,18 @@ describe('Layer Actions', () => {
 
     it('should return provided features on the action', () => {
       const action = updateFeatures(features);
+      expect(action.features).toBe(features)
+    })
+  });
+
+  describe("deleteFeatures", () => {
+    it('should return DELETE_FEATURES as the action type', () => {
+      const action = deleteFeatures(features);
+      expect(action.type).toBe(DELETE_FEATURES)
+    })
+
+    it('should return provided features on the action', () => {
+      const action = deleteFeatures(features);
       expect(action.features).toBe(features)
     })
   });

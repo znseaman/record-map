@@ -1,4 +1,4 @@
-import { undo, redo, updateFeatures } from '../actions';
+import { undo, redo, updateFeatures, deleteFeatures } from '../actions';
 
 import reducer from '../reducers';
 import initialState from '../store/initialState';
@@ -73,6 +73,25 @@ describe('Layer Reducer', () => {
       expect(state.layer.present.features[0].geometry.coordinates[0]).toBe(coordinates[0]);
       expect(state.layer.present.features[0].geometry.coordinates[1]).toBe(coordinates[1]);
 
+      expect(state.layer.future.length).toBe(0);
+    })
+  })
+
+  describe('deleteFeatures', () => {
+    it('should remove the 2 features if they are within the present.features', () => {
+      const [first, second] = features;
+      const oneAdded = {
+        past: [{ ...initialState.layer.present }],
+        present: { ...initialState.layer.present, features: [first, second] },
+        future: []
+      };
+      const action = deleteFeatures([first, second]);
+      const state = reducer({ layer: oneAdded }, action);
+
+      expect(state.layer.present.features.length).toBe(0);
+      expect(state.layer.past.length).toBe(2);
+      expect(state.layer.past[0].features[0]).toBe(first);
+      expect(state.layer.past[0].features[1]).toBe(second);
       expect(state.layer.future.length).toBe(0);
     })
   })
