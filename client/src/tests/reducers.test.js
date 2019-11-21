@@ -12,34 +12,6 @@ describe('Combined Reducer', () => {
 
 describe('Layer Reducer', () => {
   describe('updateFeatures', () => {
-    it('should unshift 1 feature onto empty present.features', () => {
-      const [first] = features;
-      const action = updateFeatures([first]);
-      const state = reducer(initialState, action);
-
-      expect(state.layer.past.length).toBe(1);
-      expect(state.layer.past[0]).toBe(initialState.layer.present);
-
-      expect(state.layer.present.features.length).toBe(1);
-      expect(state.layer.present.features[0]).toBe(first);
-      expect(state.layer.future.length).toBe(0);
-    })
-
-    it('should unshift 4 features to present.features if present.features is empty', () => {
-      const action = updateFeatures(features);
-      const state = reducer(initialState, action);
-
-      expect(state.layer.past.length).toBe(1);
-      expect(state.layer.past[0]).toBe(initialState.layer.present);
-
-      expect(state.layer.present.features.length).toBe(4);
-      expect(state.layer.present.features[0]).toBe(features[3]);
-      expect(state.layer.present.features[1]).toBe(features[2]);
-      expect(state.layer.present.features[2]).toBe(features[1]);
-      expect(state.layer.present.features[3]).toBe(features[0]);
-      expect(state.layer.future.length).toBe(0);
-    })
-
     it('should update 1 feature if id exists in present.features', () => {
       const oneAdded = {
         past: [{ ...initialState.layer.present }],

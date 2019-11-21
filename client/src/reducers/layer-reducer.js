@@ -43,9 +43,6 @@ export function updateFeatures(state, action) {
 }
 
 // @TODO: remove the unnecessary branching
-// Things happening below:
-// 1) checking if it already exists, then replace it at that index
-// 2) if it doesn't, then `concat` both arrays
 export function replaceFeatures(arr1, arr2) {
   /* Don't manipulate present object */
   var localArr1 = [...arr1];
@@ -54,9 +51,6 @@ export function replaceFeatures(arr1, arr2) {
     if (index != -1) {
       /* Replace the feature by index */
       localArr1[index] = feature;
-    } else {
-      /* Add the feature */
-      localArr1 = concat([feature], localArr1);
     }
   }
 
