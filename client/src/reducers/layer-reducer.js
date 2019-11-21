@@ -1,3 +1,4 @@
+import { concat } from 'ramda';
 import {
   SET_LAYER_HISTORY,
   UNDO_LAYER,
@@ -38,6 +39,10 @@ export function updateFeatures(state, action) {
   }
 }
 
+// @TODO: remove the unnecessary branching
+// Things happening below:
+// 1) checking if it already exists, then replace it at that index
+// 2) if it doesn't, then `concat` both arrays
 export function replaceFeatures(present, features) {
   /* Don't manipulate present object */
   var localPresent = { ...present };
@@ -64,6 +69,7 @@ export function deleteFeatures(state, action) {
   }
 }
 
+// @TODO: this can be simplified to pass in keys instead of features
 export function removeFeatures(present, features) {
   /* Don't manipulate present object */
   var localPresent = { ...present };
@@ -108,16 +114,10 @@ export function addFeatures(state, action) {
   const { past, present, future } = state;
   return {
     past: [present, ...past],
-    present: createFeatures(present, action.features),
+    present: {
+      ...present,
+      features: concat(present.features, action.features)
+    },
     future
   }
-}
-
-export function createFeatures(present, features) {
-  /* Don't manipulate present object */
-  var localPresent = { ...present };
-  debugger;
-  localPresent.features = [...localPresent.features, ...features]
-
-  return localPresent;
 }
