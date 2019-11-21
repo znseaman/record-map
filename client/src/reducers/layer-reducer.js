@@ -1,4 +1,4 @@
-import { concat } from 'ramda';
+import { concat, filter, includes, lensProp, map, prop, set } from 'ramda';
 import {
   SET_LAYER_HISTORY,
   UNDO_LAYER,
@@ -11,7 +11,6 @@ import {
 import initialState from '../store/initialState';
 
 export default (state = initialState.layer, action) => {
-  const { past, present, future } = state;
   switch (action.type) {
     case SET_LAYER_HISTORY:
       return action.layer;
@@ -33,8 +32,12 @@ export default (state = initialState.layer, action) => {
 export function updateFeatures(state, action) {
   const { past, present, future } = state;
   return {
-    past: [present, ...past],
-    present: replaceFeatures(present, action.features),
+    past: concat([present], past),
+    present: set(
+      lensProp('features'),
+      replaceFeatures(present.features, action.features),
+      present
+    ),
     future
   }
 }
@@ -43,41 +46,41 @@ export function updateFeatures(state, action) {
 // Things happening below:
 // 1) checking if it already exists, then replace it at that index
 // 2) if it doesn't, then `concat` both arrays
-export function replaceFeatures(present, features) {
+export function replaceFeatures(arr1, arr2) {
   /* Don't manipulate present object */
-  var localPresent = { ...present };
-  for (let feature of features) {
-    const index = localPresent.features.findIndex(f => f.id == feature.id);
+  var localArr1 = [...arr1];
+  for (let feature of arr2) {
+    const index = localArr1.findIndex(f => f.id == feature.id);
     if (index != -1) {
       /* Replace the feature by index */
-      localPresent.features[index] = feature;
+      localArr1[index] = feature;
     } else {
       /* Add the feature */
-      localPresent.features = [feature, ...localPresent.features];
+      localArr1 = concat([feature], localArr1);
     }
   }
 
-  return localPresent;
+  return localArr1;
 }
 
 export function deleteFeatures(state, action) {
   const { past, present, future } = state;
   return {
-    past: [present, ...past],
-    present: removeFeatures(present, action.features),
+    past: concat([present], past),
+    present: set(
+      lensProp('features'),
+      removeFeatures(present.features, action.features),
+      present
+    ),
     future
   }
 }
 
-// @TODO: this can be simplified to pass in keys instead of features
-export function removeFeatures(present, features) {
-  /* Don't manipulate present object */
-  var localPresent = { ...present };
-  var keys = features.map(f => f.id);
-
-  localPresent.features = localPresent.features.filter(f => !keys.includes(f.id));
-
-  return localPresent;
+// @IDEA: try placing these 2 arrays into List Containers
+export function removeFeatures(arr1, arr2) {
+  const keys = map(prop('id'), arr2);
+  const predicate = f => !includes(f.id, keys);
+  return filter(predicate, arr1);
 }
 
 export function undoFeatures(state) {
@@ -85,13 +88,12 @@ export function undoFeatures(state) {
 
   if (past.length == 0) return state;
 
-  var newFuture = [present, ...future];
   var [newPresent, ...newPast] = past;
 
   return {
     past: newPast,
     present: newPresent,
-    future: newFuture
+    future: concat([present], future)
   };
 }
 
@@ -101,10 +103,9 @@ export function redoFeatures(state) {
   if (future.length == 0) return state;
 
   var [newPresent, ...newFuture] = future;
-  var newPast = [present, ...past];
 
   return {
-    past: newPast,
+    past: concat([present], past),
     present: newPresent,
     future: newFuture
   };
@@ -113,11 +114,12 @@ export function redoFeatures(state) {
 export function addFeatures(state, action) {
   const { past, present, future } = state;
   return {
-    past: [present, ...past],
-    present: {
-      ...present,
-      features: concat(present.features, action.features)
-    },
+    past: concat([present], past),
+    present: set(
+      lensProp('features'),
+      concat(present.features, action.features),
+      present
+    ),
     future
   }
 }
