@@ -2,15 +2,16 @@ import { all, call, put, takeEvery } from "redux-saga/effects";
 
 import Api from "../lib/api";
 
-import { setLayerHistory, updateFeatures, deleteFeatures, undoLayer, redoLayer } from "../actions";
+import { setLayerHistory, updateFeatures, deleteFeatures, undoLayer, redoLayer, addFeatures } from "../actions";
 import {
   GET_LAYER_HISTORY_FROM_API, UPDATE_LAYER_TO_API,
   DELETE_FEATURES_FROM_LAYER_STORAGE, UNDO_LAYER_TO_LOCAL_STORAGE,
   REDO_LAYER_TO_LOCAL_STORAGE,
+  ADD_FEATURES_TO_LAYER_STORAGE,
 } from "../constants";
 
 export default function* rootSaga() {
-  yield all([getLayerFromApi(), updateLayerToApi(), deleteFeaturesFromLayerStorage(), undoLayerToLocalStorage(), redoLayerToLocalStorage()]);
+  yield all([getLayerFromApi(), updateLayerToApi(), deleteFeaturesFromLayerStorage(), undoLayerToLocalStorage(), redoLayerToLocalStorage(), addFeatureToLayerStorage()]);
 }
 
 export function* getLayerFromApi() {
@@ -64,4 +65,15 @@ export function* makeRedoRequest() {
   /* @TODO: extract this logging middleware */
   yield call(Api.log);
   yield put(redoLayer());
+}
+
+export function* addFeatureToLayerStorage() {
+  yield takeEvery(ADD_FEATURES_TO_LAYER_STORAGE, makeCreateRequest);
+}
+
+export function* makeCreateRequest(action) {
+  yield call(Api.add, action);
+  /* @TODO: extract this logging middleware */
+  yield call(Api.log);
+  yield put(addFeatures(action.features));
 }

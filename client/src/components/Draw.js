@@ -4,16 +4,31 @@ import { bindActionCreators } from "redux";
 import {
   getLayerHistoryFromApi,
   updateLayerToApi,
-  deleteFeaturesFromLayerStorage
+  deleteFeaturesFromLayerStorage,
+  addFeaturesToLayerStorage
 } from "../actions";
 import DrawControl from "react-mapbox-gl-draw";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
+
+const mapStateToProps = ({ layer: { present } }) => ({ layer: present });
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(
+    {
+      add: addFeaturesToLayerStorage,
+      get: getLayerHistoryFromApi,
+      save: updateLayerToApi,
+      remove: deleteFeaturesFromLayerStorage
+    },
+    dispatch
+  );
+};
 
 const Draw = props => {
   var control = useRef({});
   var selectedFeatures = useRef([]);
 
-  const { get, save, remove, layer } = props;
+  const { add, get, save, remove, layer } = props;
 
   useEffect(() => {
     get();
@@ -47,6 +62,7 @@ const Draw = props => {
 
   const onDrawCreate = ({ features }) => {
     console.log(`onDrawCreate`, features);
+    add(features);
   };
 
   const onDrawDelete = event => {
@@ -120,19 +136,6 @@ const Draw = props => {
       onDrawModeChange={onDrawModeChange}
       onDrawRender={onDrawRender}
     ></DrawControl>
-  );
-};
-
-const mapStateToProps = ({ layer: { present } }) => ({ layer: present });
-
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators(
-    {
-      get: getLayerHistoryFromApi,
-      save: updateLayerToApi,
-      remove: deleteFeaturesFromLayerStorage
-    },
-    dispatch
   );
 };
 

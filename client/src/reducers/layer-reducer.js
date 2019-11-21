@@ -3,7 +3,8 @@ import {
   UNDO_LAYER,
   REDO_LAYER,
   UPDATE_FEATURES,
-  DELETE_FEATURES
+  DELETE_FEATURES,
+  ADD_FEATURES,
 } from "../constants";
 
 import initialState from '../store/initialState';
@@ -13,6 +14,8 @@ export default (state = initialState.layer, action) => {
   switch (action.type) {
     case SET_LAYER_HISTORY:
       return action.layer;
+    case ADD_FEATURES:
+      return addFeatures(state, action);
     case UPDATE_FEATURES:
       /* @TODO: separate out add & update functionality */
       return updateFeatures(state, action);
@@ -99,4 +102,22 @@ export function redoFeatures(state) {
     present: newPresent,
     future: newFuture
   };
+}
+
+export function addFeatures(state, action) {
+  const { past, present, future } = state;
+  return {
+    past: [present, ...past],
+    present: createFeatures(present, action.features),
+    future
+  }
+}
+
+export function createFeatures(present, features) {
+  /* Don't manipulate present object */
+  var localPresent = { ...present };
+  debugger;
+  localPresent.features = [...localPresent.features, ...features]
+
+  return localPresent;
 }

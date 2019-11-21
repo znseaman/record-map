@@ -8,7 +8,9 @@ import {
   DELETE_FEATURES_FROM_LAYER_STORAGE,
   DELETE_FEATURES,
   UNDO_LAYER_TO_LOCAL_STORAGE,
-  REDO_LAYER_TO_LOCAL_STORAGE
+  REDO_LAYER_TO_LOCAL_STORAGE,
+  ADD_FEATURES_TO_LAYER_STORAGE,
+  ADD_FEATURES
 } from "../constants";
 
 export const getLayerHistoryFromApi = () => ({
@@ -26,3 +28,6 @@ export const updateFeatures = features => ({ type: UPDATE_FEATURES, features });
 
 export const deleteFeaturesFromLayerStorage = features => ({ type: DELETE_FEATURES_FROM_LAYER_STORAGE, features })
 export const deleteFeatures = features => ({ type: DELETE_FEATURES, features })
+
+export const addFeaturesToLayerStorage = features => ({ type: ADD_FEATURES_TO_LAYER_STORAGE, features })
+export const addFeatures = features => ({ type: ADD_FEATURES, features })
