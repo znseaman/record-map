@@ -1,4 +1,4 @@
-import { undoLayer, redoLayer, updateFeatures, deleteFeatures } from '../actions';
+import { undoLayer, redoLayer, updateFeatures, deleteFeatures, addFeatures } from '../actions';
 
 import reducer from '../reducers';
 import initialState from '../store/initialState';
@@ -145,6 +145,22 @@ describe('Layer Reducer', () => {
 
       expect(state.layer.present.features.length).toBe(1);
       expect(state.layer.present).toBe(oneUndo.future[0]);
+
+      expect(state.layer.future.length).toBe(0);
+    })
+  })
+
+  describe('addFeatures', () => {
+    it('should add 1 feature to present.features', () => {
+      const [first] = features;
+      const action = addFeatures([first]);
+      const state = reducer(initialState, action);
+
+      expect(state.layer.past.length).toBe(1);
+      expect(state.layer.past[0]).toBe(initialState.layer.present);
+
+      expect(state.layer.present.features.length).toBe(1);
+      expect(state.layer.present.features[0]).toBe(first);
 
       expect(state.layer.future.length).toBe(0);
     })

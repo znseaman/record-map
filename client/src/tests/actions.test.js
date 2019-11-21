@@ -6,9 +6,10 @@ import {
   UPDATE_LAYER_TO_API,
   UPDATE_FEATURES,
   DELETE_FEATURES,
+  ADD_FEATURES,
 } from '../constants'
 
-import { setLayerHistory, getLayerHistoryFromApi, undoLayer, redoLayer, updateLayerToApi, updateFeatures, deleteFeatures } from "../actions";
+import { setLayerHistory, getLayerHistoryFromApi, undoLayer, redoLayer, updateLayerToApi, updateFeatures, deleteFeatures, addFeatures } from "../actions";
 
 import initialState from '../store/initialState';
 import features from '../data/features';
@@ -81,6 +82,18 @@ describe('Layer Actions', () => {
 
     it('should return provided features on the action', () => {
       const action = deleteFeatures(features);
+      expect(action.features).toBe(features)
+    })
+  });
+
+  describe("addFeatures", () => {
+    it('should return ADD_FEATURES as the action type', () => {
+      const action = addFeatures(features);
+      expect(action.type).toBe(ADD_FEATURES)
+    })
+
+    it('should return provided features on the action', () => {
+      const action = addFeatures(features);
       expect(action.features).toBe(features)
     })
   });
