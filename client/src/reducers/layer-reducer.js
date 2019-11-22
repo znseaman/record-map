@@ -1,4 +1,4 @@
-import { concat, filter, includes, lensProp, map, prop, set } from 'ramda';
+import { compose, concat, findIndex, includes, lensProp, map, prop, propEq, reject, set } from 'ramda';
 import {
   SET_LAYER_HISTORY,
   UNDO_LAYER,
@@ -29,12 +29,16 @@ export default (state = initialState.layer, action) => {
   return state;
 };
 
+const L = {
+  features: lensProp('features')
+};
+
 export function updateFeatures(state, action) {
   const { past, present, future } = state;
   return {
     past: concat([present], past),
     present: set(
-      lensProp('features'),
+      L.features,
       replaceFeatures(present.features, action.features),
       present
     ),
@@ -47,9 +51,14 @@ export function replaceFeatures(arr1, arr2) {
   /* Don't manipulate present object */
   var localArr1 = [...arr1];
   for (let feature of arr2) {
-    const index = localArr1.findIndex(f => f.id == feature.id);
-    if (index != -1) {
-      /* Replace the feature by index */
+    const getIndex = compose(
+      findIndex,
+      propEq('id'),
+      prop('id')
+    )(feature);
+
+    const index = getIndex(localArr1);
+    if (index > -1) {
       localArr1[index] = feature;
     }
   }
@@ -62,7 +71,7 @@ export function deleteFeatures(state, action) {
   return {
     past: concat([present], past),
     present: set(
-      lensProp('features'),
+      L.features,
       removeFeatures(present.features, action.features),
       present
     ),
@@ -73,8 +82,8 @@ export function deleteFeatures(state, action) {
 // @IDEA: try placing these 2 arrays into List Containers
 export function removeFeatures(arr1, arr2) {
   const keys = map(prop('id'), arr2);
-  const predicate = f => !includes(f.id, keys);
-  return filter(predicate, arr1);
+  const predicate = f => includes(f.id, keys);
+  return reject(predicate, arr1);
 }
 
 export function undoFeatures(state) {
@@ -110,7 +119,7 @@ export function addFeatures(state, action) {
   return {
     past: concat([present], past),
     present: set(
-      lensProp('features'),
+      L.features,
       concat(present.features, action.features),
       present
     ),
