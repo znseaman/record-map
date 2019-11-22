@@ -2,16 +2,24 @@ import localforage from "localforage";
 import { format } from "date-fns";
 
 import initialState from "../store/initialState";
+import emptyGeoJSON from '../data/emptyGeoJSON';
 import { updateFeatures, deleteFeatures, undoFeatures, redoFeatures, addFeatures } from '../reducers/layer-reducer';
 
 window.localforage = localforage;
 
 const DRAW_KEY = "draw_layer";
 
+const emptyLayer = {
+  layer: {
+    ...initialState.layer,
+    present: emptyGeoJSON
+  }
+}
+
 const get = async () => {
   // await localforage.removeItem(DRAW_KEY)
   const layer = await localforage.getItem(DRAW_KEY);
-  return layer || initialState;
+  return layer || emptyLayer;
 };
 
 const set = async layer => {

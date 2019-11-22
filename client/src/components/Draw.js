@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import {
@@ -35,11 +35,12 @@ const Draw = props => {
   }, []);
 
   useEffect(() => {
-    set();
+    if (Object.keys(layer).length > 0) set()
   }, [layer]);
 
   const set = () => {
     /* @TODO: diff the current and newly changed layer to see if they have changed before updating possibly using jsondiffpatch, turf, deep-diff */
+    /* @TODO: the only times when `set` is necessary to call in on get, undo & redo */
     /* Remove if there is already a layer */
     const all = control.current.draw.getAll();
     if (all) {

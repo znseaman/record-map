@@ -3,6 +3,7 @@ import { undoLayer, redoLayer, updateFeatures, deleteFeatures, addFeatures } fro
 import reducer from '../reducers';
 import initialState from '../store/initialState';
 import features from '../data/features';
+import emptyGeoJSON from '../data/emptyGeoJSON';
 
 describe('Combined Reducer', () => {
   it('should match the inital state', () => {
@@ -77,8 +78,14 @@ describe('Layer Reducer', () => {
     })
 
     it('should push the current present to the future, shift the sub zero of past to the present and set past to the rest of past', () => {
+      const emptyLayer = {
+        layer: {
+          ...initialState.layer,
+          present: emptyGeoJSON
+        }
+      }
       const oneAdded = {
-        past: [{ ...initialState.layer.present }],
+        past: [{ ...emptyLayer.layer.present }],
         present: { ...initialState.layer.present, features: [features[0]] },
         future: []
       };
@@ -124,12 +131,18 @@ describe('Layer Reducer', () => {
 
   describe('addFeatures', () => {
     it('should add 1 feature to present.features', () => {
+      const emptyLayer = {
+        layer: {
+          ...initialState.layer,
+          present: emptyGeoJSON
+        }
+      }
       const [first] = features;
       const action = addFeatures([first]);
-      const state = reducer(initialState, action);
+      const state = reducer(emptyLayer, action);
 
       expect(state.layer.past.length).toBe(1);
-      expect(state.layer.past[0]).toBe(initialState.layer.present);
+      expect(state.layer.past[0]).toBe(emptyLayer.layer.present);
 
       expect(state.layer.present.features.length).toBe(1);
       expect(state.layer.present.features[0]).toBe(first);
