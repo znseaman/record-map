@@ -83,9 +83,9 @@ const Draw = props => {
 
   const onDrawUpdate = event => {
     console.log(`onDrawUpdate`, event);
-    const { type, features } = event;
+    const { type, features, action } = event;
 
-    if (type === "draw.update") {
+    if (type === "draw.update" && (action == "move" || action == "change_coordinates")) {
       selectedFeatures.current = features;
     }
   };
@@ -94,16 +94,8 @@ const Draw = props => {
     console.log(`onDrawSelectionChange`, event);
 
     // Zero features means the user has clicked away from adding a feature ("direct_select")
-    if (event.features.length == 0) {
+    if (event.features.length == 0 && selectedFeatures.current.length > 0) {
       save(selectedFeatures.current);
-      resetSelected();
-      return;
-    }
-
-    switch (event.type) {
-      case "draw.selectionchange":
-        selectedFeatures.current = event.features;
-        break;
     }
   };
 
