@@ -1,4 +1,5 @@
-import { compose, concat, findIndex, includes, lensProp, map, prop, propEq, reject, set } from 'ramda';
+import { concat, includes, lensProp, map, prop, reject, set } from 'ramda';
+import { findIndexById } from '../utils';
 import {
   SET_LAYER_HISTORY,
   UNDO_LAYER,
@@ -51,13 +52,7 @@ export function replaceFeatures(arr1, arr2) {
   /* Don't manipulate present object */
   var localArr1 = [...arr1];
   for (let feature of arr2) {
-    const getIndex = compose(
-      findIndex,
-      propEq('id'),
-      prop('id')
-    )(feature);
-
-    const index = getIndex(localArr1);
+    const index = findIndexById(feature)(localArr1);
     if (index > -1) {
       localArr1[index] = feature;
     }
