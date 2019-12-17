@@ -4,6 +4,7 @@ import {
   SET_LAYER_HISTORY,
   UNDO_LAYER,
   REDO_LAYER,
+  RESET_LAYER,
   UPDATE_FEATURES,
   DELETE_FEATURES,
   ADD_FEATURES,
@@ -25,6 +26,8 @@ export default (state = initialState.layer, action) => {
       return undoFeatures(state);
     case REDO_LAYER:
       return redoFeatures(state);
+    case RESET_LAYER:
+      return action.layer;
   }
   return state;
 };

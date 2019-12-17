@@ -2,16 +2,17 @@ import { all, call, put, takeEvery } from "redux-saga/effects";
 
 import Api from "../lib/api";
 
-import { setLayerHistory, updateFeatures, deleteFeatures, undoLayer, redoLayer, addFeatures } from "../actions";
+import { setLayerHistory, updateFeatures, deleteFeatures, undoLayer, redoLayer, addFeatures, resetLayer } from "../actions";
 import {
   GET_LAYER_HISTORY_FROM_API, UPDATE_LAYER_TO_API,
   DELETE_FEATURES_FROM_LAYER_STORAGE, UNDO_LAYER_TO_LOCAL_STORAGE,
   REDO_LAYER_TO_LOCAL_STORAGE,
   ADD_FEATURES_TO_LAYER_STORAGE,
+  RESET_LAYER_TO_LOCAL_STORAGE,
 } from "../constants";
 
 export default function* rootSaga() {
-  yield all([getLayerFromApi(), updateLayerToApi(), deleteFeaturesFromLayerStorage(), undoLayerToLocalStorage(), redoLayerToLocalStorage(), addFeatureToLayerStorage()]);
+  yield all([getLayerFromApi(), updateLayerToApi(), deleteFeaturesFromLayerStorage(), undoLayerToLocalStorage(), redoLayerToLocalStorage(), addFeatureToLayerStorage(), resetLayerToLocalStorage()]);
 }
 
 export function* getLayerFromApi() {
@@ -76,4 +77,16 @@ export function* makeCreateRequest(action) {
   /* @TODO: extract this logging middleware */
   yield call(Api.log);
   yield put(addFeatures(action.features));
+}
+
+export function* resetLayerToLocalStorage() {
+  yield takeEvery(RESET_LAYER_TO_LOCAL_STORAGE, makeResetRequest);
+}
+
+export function* makeResetRequest() {
+  const layer = yield call(Api.reset);
+
+  /* @TODO: extract this logging middleware */
+  yield call(Api.log);
+  yield put(resetLayer(layer));
 }

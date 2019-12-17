@@ -84,6 +84,16 @@ const add = async action => {
   return layer;
 }
 
+const reset = async () => {
+  await localforage.removeItem(DRAW_KEY)
+  const res = await get();
+
+  if (typeof res == 'undefined') return undefined;
+  const { layer } = res;
+
+  return layer;
+};
+
 export default {
   get,
   set,
@@ -93,4 +103,5 @@ export default {
   undo,
   redo,
   add,
+  reset,
 };

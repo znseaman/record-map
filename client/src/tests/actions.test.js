@@ -3,13 +3,14 @@ import {
   SET_LAYER_HISTORY,
   UNDO_LAYER,
   REDO_LAYER,
+  RESET_LAYER,
   UPDATE_LAYER_TO_API,
   UPDATE_FEATURES,
   DELETE_FEATURES,
   ADD_FEATURES,
 } from '../constants'
 
-import { setLayerHistory, getLayerHistoryFromApi, undoLayer, redoLayer, updateLayerToApi, updateFeatures, deleteFeatures, addFeatures } from "../actions";
+import { setLayerHistory, getLayerHistoryFromApi, undoLayer, redoLayer, updateLayerToApi, updateFeatures, deleteFeatures, addFeatures, resetLayer } from "../actions";
 
 import initialState from '../store/initialState';
 import features from '../data/features';
@@ -47,6 +48,13 @@ describe('Layer Actions', () => {
     it('should return REDO_LAYER as the action type', () => {
       const action = redoLayer();
       expect(action.type).toBe(REDO_LAYER)
+    })
+  });
+
+  describe("resetLayer", () => {
+    it('should return RESET_LAYER as the action type', () => {
+      const action = resetLayer();
+      expect(action.type).toBe(RESET_LAYER)
     })
   });
 
