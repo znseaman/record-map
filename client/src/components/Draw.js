@@ -57,10 +57,6 @@ const Draw = props => {
     }
   };
 
-  const resetSelected = () => {
-    selectedFeatures.current = [];
-  };
-
   const onDrawCreate = ({ features }) => {
     console.log(`onDrawCreate`, features);
     add(features);
