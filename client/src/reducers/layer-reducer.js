@@ -18,7 +18,6 @@ export default (state = initialState.layer, action) => {
     case ADD_FEATURES:
       return addFeatures(state, action);
     case UPDATE_FEATURES:
-      /* @TODO: separate out add & update functionality */
       return updateFeatures(state, action);
     case DELETE_FEATURES:
       return deleteFeatures(state, action);
