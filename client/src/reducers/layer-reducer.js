@@ -8,6 +8,8 @@ import {
   UPDATE_FEATURES,
   DELETE_FEATURES,
   ADD_FEATURES,
+  COMBINE_FEATURES,
+  UNCOMBINE_FEATURES
 } from "../constants";
 
 import initialState from '../store/initialState';
@@ -28,6 +30,9 @@ export default (state = initialState.layer, action) => {
       return redoFeatures(state);
     case RESET_LAYER:
       return action.layer;
+    case COMBINE_FEATURES:
+    case UNCOMBINE_FEATURES:
+      return combineFeatures(state, action);
   }
   return state;
 };
@@ -122,4 +127,15 @@ export function addFeatures(state, action) {
     ),
     future
   }
+}
+
+export function combineFeatures(state, action) {
+  const { past, present, future } = state;
+  // delete old
+  const deleteAction = { ...action, features: action.deletedFeatures };
+  // add new
+  const addAction = { ...action, features: action.createdFeatures };
+  return {
+    ...addFeatures(deleteFeatures(state, deleteAction), addAction),
+  };
 }

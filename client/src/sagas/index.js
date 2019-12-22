@@ -2,17 +2,19 @@ import { all, call, put, takeEvery } from "redux-saga/effects";
 
 import Api from "../lib/api";
 
-import { setLayerHistory, updateFeatures, deleteFeatures, undoLayer, redoLayer, addFeatures, resetLayer } from "../actions";
+import { setLayerHistory, updateFeatures, deleteFeatures, undoLayer, redoLayer, addFeatures, resetLayer, combineFeatures, uncombineFeatures } from "../actions";
 import {
   GET_LAYER_HISTORY_FROM_API, UPDATE_LAYER_TO_API,
   DELETE_FEATURES_FROM_LAYER_STORAGE, UNDO_LAYER_TO_LOCAL_STORAGE,
   REDO_LAYER_TO_LOCAL_STORAGE,
   ADD_FEATURES_TO_LAYER_STORAGE,
   RESET_LAYER_TO_LOCAL_STORAGE,
+  COMBINE_FEATURES_TO_LAYER_STORAGE,
+  UNCOMBINE_FEATURES_TO_LAYER_STORAGE,
 } from "../constants";
 
 export default function* rootSaga() {
-  yield all([getLayerFromApi(), updateLayerToApi(), deleteFeaturesFromLayerStorage(), undoLayerToLocalStorage(), redoLayerToLocalStorage(), addFeatureToLayerStorage(), resetLayerToLocalStorage()]);
+  yield all([getLayerFromApi(), updateLayerToApi(), deleteFeaturesFromLayerStorage(), undoLayerToLocalStorage(), redoLayerToLocalStorage(), addFeatureToLayerStorage(), resetLayerToLocalStorage(), combineFeatureToLayerStorage(), uncombineFeatureToLayerStorage()]);
 }
 
 export function* getLayerFromApi() {
@@ -89,4 +91,26 @@ export function* makeResetRequest() {
   /* @TODO: extract this logging middleware */
   yield call(Api.log);
   yield put(resetLayer(layer));
+}
+
+export function* combineFeatureToLayerStorage() {
+  yield takeEvery(COMBINE_FEATURES_TO_LAYER_STORAGE, makeCombineRequest);
+}
+
+export function* makeCombineRequest(action) {
+  yield call(Api.combine, action);
+  /* @TODO: extract this logging middleware */
+  yield call(Api.log);
+  yield put(combineFeatures(action));
+}
+
+export function* uncombineFeatureToLayerStorage() {
+  yield takeEvery(UNCOMBINE_FEATURES_TO_LAYER_STORAGE, makeUncombineRequest);
+}
+
+export function* makeUncombineRequest(action) {
+  yield call(Api.combine, action);
+  /* @TODO: extract this logging middleware */
+  yield call(Api.log);
+  yield put(uncombineFeatures(action));
 }

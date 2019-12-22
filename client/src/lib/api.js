@@ -3,7 +3,7 @@ import { format } from "date-fns";
 
 import initialState from "../store/initialState";
 import emptyGeoJSON from '../data/emptyGeoJSON';
-import { updateFeatures, deleteFeatures, undoFeatures, redoFeatures, addFeatures } from '../reducers/layer-reducer';
+import { updateFeatures, deleteFeatures, undoFeatures, redoFeatures, addFeatures, combineFeatures } from '../reducers/layer-reducer';
 
 window.localforage = localforage;
 
@@ -94,6 +94,16 @@ const reset = async () => {
   return layer;
 };
 
+// is just a combination of destroy & add
+const combine = async action => {
+  const res = await get();
+  if (typeof res == 'undefined') return undefined;
+  const { layer } = res;
+  await localforage.setItem(DRAW_KEY, { layer: combineFeatures(layer, action) });
+
+  return layer;
+};
+
 export default {
   get,
   set,
@@ -104,4 +114,5 @@ export default {
   redo,
   add,
   reset,
+  combine
 };

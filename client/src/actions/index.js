@@ -12,7 +12,11 @@ import {
   REDO_LAYER_TO_LOCAL_STORAGE,
   RESET_LAYER_TO_LOCAL_STORAGE,
   ADD_FEATURES_TO_LAYER_STORAGE,
-  ADD_FEATURES
+  ADD_FEATURES,
+  COMBINE_FEATURES_TO_LAYER_STORAGE,
+  COMBINE_FEATURES,
+  UNCOMBINE_FEATURES_TO_LAYER_STORAGE,
+  UNCOMBINE_FEATURES
 } from "../constants";
 
 export const getLayerHistoryFromApi = () => ({
@@ -35,3 +39,9 @@ export const deleteFeatures = features => ({ type: DELETE_FEATURES, features })
 
 export const addFeaturesToLayerStorage = features => ({ type: ADD_FEATURES_TO_LAYER_STORAGE, features })
 export const addFeatures = features => ({ type: ADD_FEATURES, features })
+
+export const combineFeaturesToLayerStorage = ({ deletedFeatures, createdFeatures }) => ({ type: COMBINE_FEATURES_TO_LAYER_STORAGE, deletedFeatures, createdFeatures })
+export const combineFeatures = ({ deletedFeatures, createdFeatures }) => ({ type: COMBINE_FEATURES, deletedFeatures, createdFeatures })
+
+export const uncombineFeaturesToLayerStorage = ({ deletedFeatures, createdFeatures }) => ({ type: UNCOMBINE_FEATURES_TO_LAYER_STORAGE, deletedFeatures, createdFeatures })
+export const uncombineFeatures = ({ deletedFeatures, createdFeatures }) => ({ type: UNCOMBINE_FEATURES, deletedFeatures, createdFeatures })

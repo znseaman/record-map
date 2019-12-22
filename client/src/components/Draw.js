@@ -5,7 +5,9 @@ import {
   getLayerHistoryFromApi,
   updateLayerToApi,
   deleteFeaturesFromLayerStorage,
-  addFeaturesToLayerStorage
+  addFeaturesToLayerStorage,
+  combineFeaturesToLayerStorage,
+  uncombineFeaturesToLayerStorage
 } from "../actions";
 import DrawControl from "react-mapbox-gl-draw";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
@@ -18,7 +20,9 @@ const mapDispatchToProps = dispatch => {
       add: addFeaturesToLayerStorage,
       get: getLayerHistoryFromApi,
       save: updateLayerToApi,
-      remove: deleteFeaturesFromLayerStorage
+      remove: deleteFeaturesFromLayerStorage,
+      combine: combineFeaturesToLayerStorage,
+      uncombine: uncombineFeaturesToLayerStorage,
     },
     dispatch
   );
@@ -28,7 +32,7 @@ const Draw = props => {
   var control = useRef({});
   var selectedFeatures = useRef([]);
 
-  const { add, get, save, remove, layer } = props;
+  const { add, get, save, remove, layer, combine, uncombine } = props;
 
   useEffect(() => {
     get();
@@ -70,12 +74,20 @@ const Draw = props => {
     }
   };
 
-  const onDrawCombine = event => {
+  const onDrawCombine = async event => {
     console.log(`onDrawCombine`, event);
+    const { type, createdFeatures, deletedFeatures } = event;
+    if (type === "draw.combine") {
+      await combine({ deletedFeatures, createdFeatures });
+    }
   };
 
-  const onDrawUncombine = event => {
+  const onDrawUncombine = async event => {
     console.log(`onDrawUncombine`, event);
+    const { type, createdFeatures, deletedFeatures } = event;
+    if (type === "draw.uncombine") {
+      await uncombine({ deletedFeatures, createdFeatures });
+    }
   };
 
   const onDrawUpdate = event => {
