@@ -105,6 +105,8 @@ const Draw = props => {
     // Zero features means the user has clicked away from adding a feature ("direct_select")
     if (event.features.length == 0 && selectedFeatures.current.length > 0) {
       save(selectedFeatures.current);
+      // reset selectedFeatures ref
+      selectedFeatures.current = [];
     }
   };
 
