@@ -2,6 +2,7 @@ import React from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import classes from "./Sidebar.module.css";
+import Button from 'react-bootstrap/Button';
 
 import { undoLayerToLocalStorage, redoLayerToLocalStorage, resetLayerToLocalStorage } from "../actions";
 
@@ -11,9 +12,12 @@ const Sidebar = props => {
     <aside className={classes["Sidebar"]}>
       <h1>Record Map</h1>
       <p>A map that records a layer with undo / redo actions</p>
-      <button onClick={undo}>Undo</button>
+      <Button className={classes["margin-10"]} variant="outline-dark" size="sm" onClick={undo}>Undo</Button>
+      <Button className={classes["margin-10"]} variant="outline-dark" size="sm" onClick={redo}>Redo</Button>
+      <Button className={classes["margin-10"]} variant="outline-dark" size="sm" onClick={() => window.confirm('Are you sure you want to reset the layer?') ? reset() : null}>Reset</Button>
+      {/* <button onClick={undo}>Undo</button>
       <button onClick={redo}>Redo</button>
-      <button onClick={() => window.confirm('Are you sure you want to reset the layer?') ? reset() : null}>Reset</button>
+      <button onClick={() => window.confirm('Are you sure you want to reset the layer?') ? reset() : null}>Reset</button> */}
     </aside>
   );
 };
