@@ -56,13 +56,29 @@ const Draw = props => {
 
   const assignRef = drawControl => control.current = drawControl;
 
-  const onDrawCreate = ({ features }) => add(features);
+  const onDrawCreate = ({ features }) => {
+    features.forEach(f => f.properties.createdAt = new Date(Date.now()));
+    add(features);
+  }
 
-  const onDrawDelete = ({ features }) => remove(features);
+  const onDrawDelete = ({ features }) => {
+    features.forEach(f => f.properties.deletedAt = new Date(Date.now()));
+    remove(features);
+  }
 
-  const onDrawCombine = ({ createdFeatures, deletedFeatures }) => combine({ deletedFeatures, createdFeatures });
+  const onDrawCombine = ({ createdFeatures, deletedFeatures }) => {
+    const now = new Date(Date.now());
+    createdFeatures.forEach(f => f.properties.createdAt = now);
+    deletedFeatures.forEach(f => f.properties.deletedAt = now);
+    combine({ deletedFeatures, createdFeatures });
+  }
 
-  const onDrawUncombine = ({ createdFeatures, deletedFeatures }) => uncombine({ deletedFeatures, createdFeatures });
+  const onDrawUncombine = ({ createdFeatures, deletedFeatures }) => {
+    const now = new Date(Date.now());
+    createdFeatures.forEach(f => f.properties.createdAt = now);
+    deletedFeatures.forEach(f => f.properties.deletedAt = now);
+    uncombine({ deletedFeatures, createdFeatures });
+  }
 
   const onDrawUpdate = ({ type, features, action }) => {
     if (type === "draw.update" && (action == "move" || action == "change_coordinates")) {
@@ -73,6 +89,7 @@ const Draw = props => {
   const onDrawSelectionChange = event => {
     // Zero features means the user has clicked away from adding a feature ("direct_select")
     if (event.features.length == 0 && selectedFeatures.current.length > 0) {
+      selectedFeatures.current.forEach(f => f.properties.updatedAt = new Date(Date.now()));
       save(selectedFeatures.current);
       // reset selectedFeatures ref
       selectedFeatures.current = [];

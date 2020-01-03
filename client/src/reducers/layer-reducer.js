@@ -1,5 +1,5 @@
 import { concat, includes, lensProp, map, prop, reject, set } from 'ramda';
-import { findIndexById } from '../utils';
+import { findIndexById, concatById } from '../utils';
 import {
   SET_LAYER_HISTORY,
   UNDO_LAYER,
@@ -70,8 +70,11 @@ export function replaceFeatures(arr1, arr2) {
 
 export function deleteFeatures(state, action) {
   const { past, present, future } = state;
+
+  const withDeletedAt = concatById(present.features, action.features);
+
   return {
-    past: concat([present], past),
+    past: concat([{ ...present, features: withDeletedAt }], past),
     present: set(
       L.features,
       removeFeatures(present.features, action.features),

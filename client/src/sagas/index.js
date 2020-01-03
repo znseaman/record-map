@@ -32,8 +32,6 @@ export function* updateLayerToApi() {
 
 export function* makeUpdateRequest(action) {
   yield call(Api.update, action);
-  /* @TODO: extract this logging middleware */
-  yield call(Api.log);
   yield put(updateFeatures(action.features));
 }
 
@@ -43,8 +41,6 @@ export function* deleteFeaturesFromLayerStorage() {
 
 export function* makeDeleteRequest(action) {
   yield call(Api.destroy, action);
-  /* @TODO: extract this logging middleware */
-  yield call(Api.log);
   yield put(deleteFeatures(action.features));
 }
 
@@ -54,8 +50,6 @@ export function* undoLayerToLocalStorage() {
 
 export function* makeUndoRequest() {
   yield call(Api.undo);
-  /* @TODO: extract this logging middleware */
-  yield call(Api.log);
   yield put(undoLayer());
 }
 
@@ -65,8 +59,6 @@ export function* redoLayerToLocalStorage() {
 
 export function* makeRedoRequest() {
   yield call(Api.redo);
-  /* @TODO: extract this logging middleware */
-  yield call(Api.log);
   yield put(redoLayer());
 }
 
@@ -76,8 +68,6 @@ export function* addFeatureToLayerStorage() {
 
 export function* makeCreateRequest(action) {
   yield call(Api.add, action);
-  /* @TODO: extract this logging middleware */
-  yield call(Api.log);
   yield put(addFeatures(action.features));
 }
 
@@ -88,8 +78,6 @@ export function* resetLayerToLocalStorage() {
 export function* makeResetRequest() {
   const layer = yield call(Api.reset);
 
-  /* @TODO: extract this logging middleware */
-  yield call(Api.log);
   yield put(resetLayer(layer));
 }
 
@@ -99,8 +87,6 @@ export function* combineFeatureToLayerStorage() {
 
 export function* makeCombineRequest(action) {
   yield call(Api.combine, action);
-  /* @TODO: extract this logging middleware */
-  yield call(Api.log);
   yield put(combineFeatures(action));
 }
 
@@ -110,7 +96,5 @@ export function* uncombineFeatureToLayerStorage() {
 
 export function* makeUncombineRequest(action) {
   yield call(Api.combine, action);
-  /* @TODO: extract this logging middleware */
-  yield call(Api.log);
   yield put(uncombineFeatures(action));
 }

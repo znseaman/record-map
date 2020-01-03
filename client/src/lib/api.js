@@ -1,5 +1,4 @@
 import localforage from "localforage";
-import { format } from "date-fns";
 
 import initialState from "../store/initialState";
 import emptyGeoJSON from '../data/emptyGeoJSON';
@@ -17,7 +16,6 @@ const emptyLayer = {
 }
 
 const get = async () => {
-  // await localforage.removeItem(DRAW_KEY)
   const layer = await localforage.getItem(DRAW_KEY);
   return layer || emptyLayer;
 };
@@ -67,13 +65,6 @@ const redo = async action => {
   return layer;
 };
 
-const log = async () => {
-  console.log(
-    `Saved update to localforage at:`,
-    format(new Date(Date.now()), "yyyy-MM-dd'T'HH:mm:ss.SSSxxx")
-  );
-};
-
 const add = async action => {
   const res = await get();
   if (typeof res == 'undefined') return undefined;
@@ -107,7 +98,6 @@ const combine = async action => {
 export default {
   get,
   set,
-  log,
   update,
   destroy,
   undo,
