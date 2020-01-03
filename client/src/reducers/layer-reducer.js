@@ -118,8 +118,12 @@ export function redoFeatures(state) {
 
 export function addFeatures(state, action) {
   const { past, present, future } = state;
+
+  // prevent adding multiple empty GeoJSONs to the past
+  const newPast = (present.features.length == 0 && past.length > 1) ? past : concat([present], past)
+
   return {
-    past: concat([present], past),
+    past: newPast,
     present: set(
       L.features,
       concat(present.features, action.features),
@@ -136,6 +140,6 @@ export function combineFeatures(state, action) {
   // add new
   const addAction = { ...action, features: action.createdFeatures };
   return {
-    ...addFeatures(deleteFeatures(state, deleteAction), addAction),
+    ...addFeatures(deleteFeatures(state, deleteAction), addAction)
   };
 }
