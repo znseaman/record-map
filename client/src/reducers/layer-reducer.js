@@ -137,7 +137,6 @@ export function addFeatures(state, action) {
 }
 
 export function combineFeatures(state, action) {
-  const { past, present, future } = state;
   // delete old
   const deleteAction = { ...action, features: action.deletedFeatures };
   // add new
