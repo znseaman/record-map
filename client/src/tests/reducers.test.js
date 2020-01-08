@@ -153,7 +153,7 @@ describe('Layer Reducer', () => {
   })
 
   describe('combineFeatures', () => {
-    it('should combine 2 feature polygons to 1 feature in present.features', () => {
+    it('should combine 2 feature polygons to 1 feature polygon in present.features', () => {
       const [, , three, four] = features;
       const deletedFeatures = [three, four];
       const emptyLayer = {
@@ -195,7 +195,7 @@ describe('Layer Reducer', () => {
   })
 
   describe('uncombineFeatures', () => {
-    it('should uncombine 1 feature polygons to 2 features in present.features', () => {
+    it('should uncombine 1 feature polygon to 2 feature polygons in present.features', () => {
       const [, , three, four] = features;
       const createdFeatures = [three, four];
       const emptyLayer = {
