@@ -8,9 +8,11 @@ import {
   UPDATE_FEATURES,
   DELETE_FEATURES,
   ADD_FEATURES,
+  COMBINE_FEATURES,
+  UNCOMBINE_FEATURES,
 } from '../constants'
 
-import { setLayerHistory, getLayerHistoryFromApi, undoLayer, redoLayer, updateLayerToApi, updateFeatures, deleteFeatures, addFeatures, resetLayer } from "../actions";
+import { setLayerHistory, getLayerHistoryFromApi, undoLayer, redoLayer, updateLayerToApi, updateFeatures, deleteFeatures, addFeatures, resetLayer, combineFeatures, uncombineFeatures } from "../actions";
 
 import initialState from '../store/initialState';
 import features from '../data/features';
@@ -103,6 +105,40 @@ describe('Layer Actions', () => {
     it('should return provided features on the action', () => {
       const action = addFeatures(features);
       expect(action.features).toBe(features)
+    })
+  });
+
+  describe("combineFeatures", () => {
+    it('should return COMBINE_FEATURES as the action type', () => {
+      const [first, ...rest] = features;
+      const [createdFeatures, deletedFeatures] = [[first], [rest]];
+      const action = combineFeatures({ createdFeatures, deletedFeatures });
+      expect(action.type).toBe(COMBINE_FEATURES)
+    })
+
+    it('should return provided features on the action', () => {
+      const [first, ...rest] = features;
+      const [createdFeatures, deletedFeatures] = [[first], [rest]];
+      const action = combineFeatures({ createdFeatures, deletedFeatures });
+      expect(action.createdFeatures).toBe(createdFeatures);
+      expect(action.deletedFeatures).toBe(deletedFeatures);
+    })
+  });
+
+  describe("uncombineFeatures", () => {
+    it('should return UNCOMBINE_FEATURES as the action type', () => {
+      const [first, ...rest] = features;
+      const [createdFeatures, deletedFeatures] = [[first], [rest]];
+      const action = uncombineFeatures({ createdFeatures, deletedFeatures });
+      expect(action.type).toBe(UNCOMBINE_FEATURES)
+    })
+
+    it('should return provided features on the action', () => {
+      const [first, ...rest] = features;
+      const [createdFeatures, deletedFeatures] = [[first], [rest]];
+      const action = uncombineFeatures({ createdFeatures, deletedFeatures });
+      expect(action.createdFeatures).toBe(createdFeatures);
+      expect(action.deletedFeatures).toBe(deletedFeatures);
     })
   });
 });

@@ -1,4 +1,5 @@
-import { undoLayer, redoLayer, updateFeatures, deleteFeatures, addFeatures } from '../actions';
+import uuid from 'uuid/v4'
+import { undoLayer, redoLayer, updateFeatures, deleteFeatures, addFeatures, combineFeatures, uncombineFeatures } from '../actions';
 
 import reducer from '../reducers';
 import initialState from '../store/initialState';
@@ -146,6 +147,89 @@ describe('Layer Reducer', () => {
 
       expect(state.layer.present.features.length).toBe(1);
       expect(state.layer.present.features[0]).toBe(first);
+
+      expect(state.layer.future.length).toBe(0);
+    })
+  })
+
+  describe('combineFeatures', () => {
+    it('should combine 2 feature polygons to 1 feature in present.features', () => {
+      const [, , three, four] = features;
+      const deletedFeatures = [three, four];
+      const emptyLayer = {
+        layer: {
+          ...initialState.layer,
+          present: emptyGeoJSON
+        }
+      }
+      const uncombinedPolygons = {
+        past: [{ ...emptyLayer.layer.present }],
+        present: { ...initialState.layer.present, features: deletedFeatures },
+        future: []
+      };
+      const createdFeatures = [
+        {
+          "id": uuid(),
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "MultiPolygon",
+            "coordinates": [
+              ...three.geometry.coordinates,
+              ...four.geometry.coordinates,
+            ]
+          }
+        }
+      ];
+      const action = combineFeatures({ createdFeatures, deletedFeatures });
+      const state = reducer({ layer: uncombinedPolygons }, action);
+
+      expect(state.layer.past.length).toBe(2);
+      expect(state.layer.past[0]).toStrictEqual(uncombinedPolygons.present);
+
+      expect(state.layer.present.features.length).toBe(1);
+      expect(state.layer.present.features).toStrictEqual(createdFeatures);
+
+      expect(state.layer.future.length).toBe(0);
+    })
+  })
+
+  describe('uncombineFeatures', () => {
+    it('should uncombine 1 feature polygons to 2 features in present.features', () => {
+      const [, , three, four] = features;
+      const createdFeatures = [three, four];
+      const emptyLayer = {
+        layer: {
+          ...initialState.layer,
+          present: emptyGeoJSON
+        }
+      }
+      const deletedFeatures = [
+        {
+          "id": uuid(),
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "MultiPolygon",
+            "coordinates": [
+              ...three.geometry.coordinates,
+              ...four.geometry.coordinates,
+            ]
+          }
+        }
+      ];
+      const combinedPolygon = {
+        past: [{ ...emptyLayer.layer.present }],
+        present: { ...initialState.layer.present, features: deletedFeatures },
+        future: []
+      };
+      const action = uncombineFeatures({ createdFeatures, deletedFeatures });
+      const state = reducer({ layer: combinedPolygon }, action);
+
+      expect(state.layer.past.length).toBe(2);
+      expect(state.layer.past[0]).toStrictEqual(combinedPolygon.present);
+      expect(state.layer.present.features.length).toBe(2);
+      expect(state.layer.present.features).toStrictEqual(createdFeatures);
 
       expect(state.layer.future.length).toBe(0);
     })
