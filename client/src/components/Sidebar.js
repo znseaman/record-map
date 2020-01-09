@@ -11,7 +11,8 @@ const Sidebar = props => {
   return (
     <aside className={classes["Sidebar"]}>
       <h1>Record Map</h1>
-      <p>A map that records a layer with undo / redo actions</p>
+      <p>Add, remove, combine, and uncombine points, lines, and polygons.</p>
+      <p>The map records the user's actions and allows the user to undo / redo actions as well as reset the map to its original empty state.</p>
       <Button className={classes["margin-10"]} variant="outline-dark" size="sm" onClick={undo}>Undo</Button>
       <Button className={classes["margin-10"]} variant="outline-dark" size="sm" onClick={redo}>Redo</Button>
       <Button className={classes["margin-10"]} variant="outline-dark" size="sm" onClick={() => window.confirm('Are you sure you want to reset the layer?') ? reset() : null}>Reset</Button>
